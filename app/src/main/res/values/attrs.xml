@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleTunerView">
+        <attr name="indicatorColor" format="color"/>
+        <attr name="outerCircleColor" format="color"/>
+        <attr name="innerCircleColor" format="color"/>
+        <attr name="textColor" format="color"/>
+        <attr name="inTuneColor" format="color"/>
+        <attr name="outOfTuneColor" format="color"/>
+        <attr name="showShadows" format="boolean"/>
+    </declare-styleable>
+</resources>

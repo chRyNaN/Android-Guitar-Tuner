@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="spacing_small">16dp</dimen>
+
+    <dimen name="text_size_large">128sp</dimen>
+
+    <dimen name="toolbar_elevation">4dp</dimen>
+
+    <dimen name="circle_tuner_view_default_min_size">400dp</dimen>
+    <dimen name="circle_tuner_view_default_shadow_x">5dp</dimen>
+    <dimen name="circle_tuner_view_default_shadow_y">5dp</dimen>
+    <dimen name="circle_tuner_view_default_radius">7dp</dimen>
+</resources>
