@@ -46,22 +46,19 @@ public class AndroidTuner implements Tuner {
 
         record = true;
 
-        recordingThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (record) {
-                    audioRecorder.read(buffer, 0, AUDIO_RECORD_READ_SIZE);
+        recordingThread = new Thread(() -> {
+            while (record) {
+                audioRecorder.read(buffer, 0, AUDIO_RECORD_READ_SIZE);
 
-                    double frequency = detector.detect(buffer);
+                double frequency = detector.detect(buffer);
 
-                    finder.setFrequency(frequency);
+                finder.setFrequency(frequency);
 
-                    String noteName = finder.getNoteName();
+                String noteName = finder.getNoteName();
 
-                    float percentageOffset = finder.getPercentageDifference();
+                float percentageOffset = finder.getPercentageDifference();
 
-                    listener.onNote(noteName, frequency, percentageOffset);
-                }
+                listener.onNote(noteName, frequency, percentageOffset);
             }
         });
 
