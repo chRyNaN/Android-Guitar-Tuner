@@ -9,7 +9,15 @@ public interface Tuner {
 
     void stop();
 
-    void setTunerListener(TunerListener listener);
+    void setListener(Listener listener);
 
-    void removeTunerListener();
+    void removeListener();
+
+    /**
+     * A listener interface for anything interested in updates from a {@link Tuner}.
+     */
+    interface Listener {
+
+        void onNote(String noteName, double frequency, float percentOffset);
+    }
 }

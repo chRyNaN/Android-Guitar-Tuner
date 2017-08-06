@@ -1,21 +1,15 @@
 package com.chrynan.android_guitar_tuner.presenter;
 
-import android.content.Context;
-
-import com.chrynan.android_guitar_tuner.di.ApplicationContext;
 import com.chrynan.android_guitar_tuner.tuner.Tuner;
-import com.chrynan.android_guitar_tuner.tuner.TunerListener;
 import com.chrynan.android_guitar_tuner.ui.TuningState;
 import com.chrynan.android_guitar_tuner.ui.view.TunerView;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TunerPresenter implements Presenter, TunerListener {
+public class TunerPresenter implements Presenter, Tuner.Listener {
 
     private final TunerView view;
-    @ApplicationContext
-    private final Context applicationContext;
     private final Tuner tuner;
 
     private final Map<String, Integer> notes = new HashMap<>();
@@ -24,12 +18,11 @@ public class TunerPresenter implements Presenter, TunerListener {
 
     private double lastFrequency;
 
-    public TunerPresenter(final TunerView view, @ApplicationContext final Context applicationContext, final Tuner tuner) {
+    public TunerPresenter(final TunerView view, final Tuner tuner) {
         this.view = view;
-        this.applicationContext = applicationContext;
         this.tuner = tuner;
 
-        tuner.setTunerListener(this);
+        tuner.setListener(this);
     }
 
     @Override
