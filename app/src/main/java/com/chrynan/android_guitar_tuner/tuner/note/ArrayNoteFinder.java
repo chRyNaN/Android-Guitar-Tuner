@@ -28,8 +28,8 @@ public class ArrayNoteFinder implements NoteFinder {
 
     private final String[] noteNames = new String[]{"F", "E", "D♯", "D", "C♯", "C", "B", "A♯", "A", "G♯", "G", "F♯"};
 
-    private double frequency;
-    private int frequencyIndex;
+    private String noteName;
+    private float percentDiff;
 
     public ArrayNoteFinder() {
         // Default public constructor
@@ -37,25 +37,12 @@ public class ArrayNoteFinder implements NoteFinder {
 
     @Override
     public void setFrequency(final double frequency) {
-        this.frequency = frequency;
-        frequencyIndex = -1;
-    }
+        int frequencyIndex = getFrequencyIndex(frequency);
 
-    @Override
-    public String getNoteName() {
-        if (frequencyIndex == -1) {
-            frequencyIndex = getFrequencyIndex(frequency);
-        }
+        // Get the name of the note
+        noteName = noteNames[frequencyIndex % noteNames.length];
 
-        return noteNames[frequencyIndex % noteNames.length];
-    }
-
-    @Override
-    public float getPercentageDifference() {
-        if (frequencyIndex == -1) {
-            frequencyIndex = getFrequencyIndex(frequency);
-        }
-
+        // Get the percentage difference
         double difference = frequency - noteFrequencies[frequencyIndex];
 
         // Equation: fn = f0 * (a)^n, where a = (2)^1/12
@@ -64,10 +51,20 @@ public class ArrayNoteFinder implements NoteFinder {
         double nextClosestFrequency = F0_440_HZ * Math.pow(TWELTH_ROOT_OF_2, n);
 
         if (difference < 0) {
-            return (float) (((frequency - nextClosestFrequency) * 100) / (noteFrequencies[frequencyIndex] - nextClosestFrequency));
+            percentDiff = (float) (((frequency - nextClosestFrequency) * 100) / (noteFrequencies[frequencyIndex] - nextClosestFrequency));
         } else {
-            return (float) (((frequency - noteFrequencies[frequencyIndex]) * 100) / (nextClosestFrequency - noteFrequencies[frequencyIndex]));
+            percentDiff = (float) (((frequency - noteFrequencies[frequencyIndex]) * 100) / (nextClosestFrequency - noteFrequencies[frequencyIndex]));
         }
+    }
+
+    @Override
+    public String getNoteName() {
+        return noteName;
+    }
+
+    @Override
+    public float getPercentageDifference() {
+        return percentDiff;
     }
 
     private int getFrequencyIndex(final double frequency) {
