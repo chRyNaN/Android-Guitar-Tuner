@@ -4,9 +4,10 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 
-import com.chrynan.android_guitar_tuner.exception.MissingListenerException;
 import com.chrynan.android_guitar_tuner.tuner.detection.PitchDetector;
 import com.chrynan.android_guitar_tuner.tuner.note.NoteFinder;
+
+import io.reactivex.Observable;
 
 /**
  * An Android implementation of the {@link Tuner} interface.
@@ -17,69 +18,42 @@ public class AndroidTuner implements Tuner {
     private static final int AUDIO_RECORD_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_DEFAULT;
     private static final int AUDIO_RECORD_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
 
-    private final PitchDetector detector;
-    private final NoteFinder finder;
+    private final MutableNote note = new MutableNote();
+
+    private final Observable<Note> observable;
     private final AudioRecord audioRecorder;
     private final int readSize;
     private final short[] buffer;
 
-    private Tuner.Listener listener;
-
-    private Thread recordingThread;
-
-    private boolean record;
-
     public AndroidTuner(final AudioConfig audioConfig, final PitchDetector detector, final NoteFinder finder) {
-        this.detector = detector;
-        this.finder = finder;
-
-        audioRecorder = new AudioRecord(AUDIO_RECORD_AUDIO_SOURCE, audioConfig.getSampleRate(),
+        this.audioRecorder = new AudioRecord(AUDIO_RECORD_AUDIO_SOURCE, audioConfig.getSampleRate(),
                 AUDIO_RECORD_CHANNEL_CONFIG, AUDIO_RECORD_AUDIO_FORMAT, audioConfig.getBufferSize());
-        readSize = audioConfig.getReadSize();
-        buffer = new short[readSize];
-    }
+        this.readSize = audioConfig.getReadSize();
+        this.buffer = new short[readSize];
 
-    @Override
-    public void start() {
-        if (listener == null) {
-            throw new MissingListenerException(Tuner.Listener.class, AndroidTuner.class);
-        }
-
-        record = true;
-
-        recordingThread = new Thread(() -> {
-            while (record) {
+        observable = Observable.create(e -> {
+            while (!e.isDisposed()) {
                 audioRecorder.read(buffer, 0, readSize);
 
                 double frequency = detector.detect(buffer);
 
                 finder.setFrequency(frequency);
 
-                String noteName = finder.getNoteName();
+                // Since the note object has mutable fields and we return the same instance,
+                // lock the object while updating its data
+                synchronized (note) {
+                    note.setFrequency(frequency);
+                    note.setName(finder.getNoteName());
+                    note.setPercentOffset(finder.getPercentageDifference());
+                }
 
-                float percentageOffset = finder.getPercentageDifference();
-
-                listener.onNote(noteName, frequency, percentageOffset);
+                e.onNext(note);
             }
         });
-
-        recordingThread.start();
     }
 
     @Override
-    public void stop() {
-        record = false;
-        recordingThread = null;
-        audioRecorder.stop();
-    }
-
-    @Override
-    public void setListener(final Tuner.Listener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    public void removeListener() {
-        this.listener = null;
+    public Observable<Note> startListening() {
+        return observable.share();
     }
 }
