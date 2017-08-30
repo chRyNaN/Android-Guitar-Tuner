@@ -25,6 +25,9 @@ import com.chrynan.android_guitar_tuner.tuner.AudioConfig;
  * combined into a single difference function step according to the YIN paper.
  */
 public class YINPitchDetector implements PitchDetector {
+    // According to the YIN Paper, the threshold should be between 0.10 and 0.15
+    private static final float ABSOLUTE_THRESHOLD = 0.125f;
+
     private final int sampleRate;
     private final short[] resultBuffer;
 
@@ -35,7 +38,7 @@ public class YINPitchDetector implements PitchDetector {
 
     @Override
     public double detect(short[] wave) {
-        int tau = 0;
+        int tau;
 
         // First, perform the functions to normalize the wave data
 
@@ -47,7 +50,8 @@ public class YINPitchDetector implements PitchDetector {
 
         // Then perform the functions to retrieve the tau (the approximate period)
 
-        // TODO
+        // The fourth step in the YIN algorithm
+        tau = absoluteThreshold();
 
         // The fundamental frequency (note frequency) is the sampling rate divided by the tau (index
         // within the resulting buffer array that marks the period).
@@ -109,8 +113,40 @@ public class YINPitchDetector implements PitchDetector {
         }
     }
 
-    private void absoluteThreshold(final short[] wave) {
-        // TODO
+    /**
+     * Performs step four of the YIN Algorithm on the {@link #resultBuffer}. This is the first step
+     * in the algorithm to attempt finding the period of the wave data. When attempting to determine
+     * the period of a wave, it's common to search for the high or low peaks or dips of the wave.
+     * This will allow you to determine the length of a cycle or its period. However, especially
+     * with a natural sound sample, it is possible to have false dips. This makes determining the
+     * period more difficult. This function attempts to resolve this issue by introducing a
+     * threshold. The result of this function yields an even lower rate (about 0.78% from about
+     * 1.69%).
+     *
+     * @return The tau indicating the approximate period.
+     */
+    private int absoluteThreshold() {
+        int tau;
+        int length = resultBuffer.length;
+
+        // The first two values in the result buffer should be 1, so start at the third value
+        for (tau = 2; tau < length; tau++) {
+            // If we are less than the threshold, continue on until we find the lowest value
+            // indicating the lowest dip in the wave since we first crossed the threshold.
+            if (resultBuffer[tau] < ABSOLUTE_THRESHOLD) {
+                while (tau + 1 < length && resultBuffer[tau + 1] < resultBuffer[tau]) {
+                    tau++;
+                }
+
+                // We have the approximate tau value, so break the loop
+                break;
+            }
+        }
+
+        // Some implementations of this algorithm set the tau value to -1 to indicate no correct tau
+        // value was found. This implementation will just return the last tau.
+
+        return tau;
     }
 
     private void parabolicInterpolation(final short[] wave) {
