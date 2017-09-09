@@ -1,4 +1,4 @@
-package com.chrynan.android_guitar_tuner.tuner;
+package com.chrynan.android_guitar_tuner.tuner.config;
 
 /**
  * An interface providing access to audio recording and playback configuration details.
