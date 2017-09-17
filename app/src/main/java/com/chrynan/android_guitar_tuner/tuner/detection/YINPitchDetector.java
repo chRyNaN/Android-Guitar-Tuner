@@ -53,11 +53,18 @@ public class YINPitchDetector implements PitchDetector {
         // The fourth step in the YIN algorithm
         tau = absoluteThreshold();
 
+        // The fifth step in the YIN algorithm
+        float betterTau = parabolicInterpolation(tau);
+
+        // TODO implement the sixth and final step of the YIN algorithm
+        // (it isn't implemented in the Tarsos DSP project but is briefly explained in the YIN
+        // paper).
+
         // The fundamental frequency (note frequency) is the sampling rate divided by the tau (index
         // within the resulting buffer array that marks the period).
         // The period is the duration (or index here) of one cycle.
         // Frequency = 1 / Period, with respect to the sampling rate, Frequency = Sample Rate / Period
-        return sampleRate / tau;
+        return sampleRate / betterTau;
     }
 
     /**
@@ -149,11 +156,41 @@ public class YINPitchDetector implements PitchDetector {
         return tau;
     }
 
-    private void parabolicInterpolation(final short[] wave) {
-        // TODO
-    }
+    /**
+     * Further lowers the error rate by using parabolas to smooth the wave between the minimum and
+     * maximum points. Especially helps to detect higher frequencies more precisely. The result of
+     * this function results in only a small error rate decline from about 0.78% to about 0.77%.
+     */
+    private float parabolicInterpolation(final int currentTau) {
+        // Finds the points to fit the parabola between
+        int x0 = currentTau < 1 ? currentTau : currentTau - 1;
+        int x2 = currentTau + 1 < resultBuffer.length ? currentTau + 1 : currentTau;
 
-    private void bestLocalEstimate(final short[] wave) {
-        // TODO
+        // Finds the better tau estimate
+        float betterTau;
+
+        if (x0 == currentTau) {
+            if (resultBuffer[currentTau] <= resultBuffer[x2]) {
+                betterTau = currentTau;
+            } else {
+                betterTau = x2;
+            }
+        } else if (x2 == currentTau) {
+            if (resultBuffer[currentTau] <= resultBuffer[x0]) {
+                betterTau = currentTau;
+            } else {
+                betterTau = x0;
+            }
+        } else {
+            // Fit the parabola between the first point, current tau, and the last point to find a
+            // better tau estimate.
+            float s0 = resultBuffer[x0];
+            float s1 = resultBuffer[currentTau];
+            float s2 = resultBuffer[x2];
+
+            betterTau = currentTau + (s2 - s0) / (2 * (2 * s1 - s2 - s0));
+        }
+
+        return betterTau;
     }
 }
