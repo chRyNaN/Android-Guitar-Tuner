@@ -14,5 +14,5 @@ public interface PitchDetector {
      * @param wave The array of 16 bit values representing the sound wave to be processed.
      * @return A double value representing the detected pitch.
      */
-    double detect(short[] wave);
+    double detect(float[] wave);
 }

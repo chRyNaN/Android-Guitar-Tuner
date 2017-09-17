@@ -1,13 +1,13 @@
 package com.chrynan.android_guitar_tuner.tuner.detection;
 
-import com.chrynan.android_guitar_tuner.tuner.AudioConfig;
+import com.chrynan.android_guitar_tuner.tuner.config.AudioConfig;
 
 /**
  * A {@link PitchDetector} implementation that uses a YIN algorithm to determine the frequency of
  * the provided waveform data. The YIN algorithm is similar to the Auto-correlation Function used
  * for pitch detection but adds additional steps to better the accuracy of the results. Each step
  * lowers the error rate further. The following implementation was inspired by
- * <a href="https://github.com/JorenSix/TarsosDSP/blob/master/src/core/be/tarsos/dsp/pitch/Yin.javaz">TarsosDsp</a>
+ * <a href="https://github.com/JorenSix/TarsosDSP/blob/master/src/core/be/tarsos/dsp/pitch/Yin.java">TarsosDsp</a>
  * and
  * <a href="http://recherche.ircam.fr/equipes/pcm/cheveign/ps/2002_JASA_YIN_proof.pdf">this YIN paper</a>.
  * The six steps in the YIN algorithm are (according to the YIN paper):
@@ -25,7 +25,10 @@ import com.chrynan.android_guitar_tuner.tuner.AudioConfig;
  * combined into a single difference function step according to the YIN paper.
  */
 public class YINPitchDetector implements PitchDetector {
-    private final int sampleRate;
+    // According to the YIN Paper, the threshold should be between 0.10 and 0.15
+    private static final float ABSOLUTE_THRESHOLD = 0.125f;
+
+    private final double sampleRate;
     private final short[] resultBuffer;
 
     public YINPitchDetector(final AudioConfig audioConfig) {
@@ -34,8 +37,8 @@ public class YINPitchDetector implements PitchDetector {
     }
 
     @Override
-    public double detect(short[] wave) {
-        int tau = 0;
+    public double detect(float[] wave) {
+        int tau;
 
         // First, perform the functions to normalize the wave data
 
@@ -47,7 +50,8 @@ public class YINPitchDetector implements PitchDetector {
 
         // Then perform the functions to retrieve the tau (the approximate period)
 
-        // TODO
+        // The fourth step in the YIN algorithm
+        tau = absoluteThreshold();
 
         // The fundamental frequency (note frequency) is the sampling rate divided by the tau (index
         // within the resulting buffer array that marks the period).
@@ -69,7 +73,7 @@ public class YINPitchDetector implements PitchDetector {
      *
      * @param wave The waveform data to perform the AutoCorrelation Difference function on.
      */
-    private void autoCorrelationDifference(final short[] wave) {
+    private void autoCorrelationDifference(final float[] wave) {
         // Note this algorithm is currently slow (O(n^2)). Should look for any possible optimizations.
         int length = resultBuffer.length;
         int i, j;
@@ -77,7 +81,7 @@ public class YINPitchDetector implements PitchDetector {
         for (j = 1; j < length; j++) {
             for (i = 0; i < length; i++) {
                 // d sub t (tau) = (x(i) - x(i - tau))^2, from i = 1 to result buffer size
-                resultBuffer[j] += (short) Math.sqrt(wave[i] - wave[i + j]);
+                resultBuffer[j] += Math.sqrt(wave[i] - wave[i + j]);
             }
         }
     }
@@ -109,8 +113,40 @@ public class YINPitchDetector implements PitchDetector {
         }
     }
 
-    private void absoluteThreshold(final short[] wave) {
-        // TODO
+    /**
+     * Performs step four of the YIN Algorithm on the {@link #resultBuffer}. This is the first step
+     * in the algorithm to attempt finding the period of the wave data. When attempting to determine
+     * the period of a wave, it's common to search for the high or low peaks or dips of the wave.
+     * This will allow you to determine the length of a cycle or its period. However, especially
+     * with a natural sound sample, it is possible to have false dips. This makes determining the
+     * period more difficult. This function attempts to resolve this issue by introducing a
+     * threshold. The result of this function yields an even lower rate (about 0.78% from about
+     * 1.69%).
+     *
+     * @return The tau indicating the approximate period.
+     */
+    private int absoluteThreshold() {
+        int tau;
+        int length = resultBuffer.length;
+
+        // The first two values in the result buffer should be 1, so start at the third value
+        for (tau = 2; tau < length; tau++) {
+            // If we are less than the threshold, continue on until we find the lowest value
+            // indicating the lowest dip in the wave since we first crossed the threshold.
+            if (resultBuffer[tau] < ABSOLUTE_THRESHOLD) {
+                while (tau + 1 < length && resultBuffer[tau + 1] < resultBuffer[tau]) {
+                    tau++;
+                }
+
+                // We have the approximate tau value, so break the loop
+                break;
+            }
+        }
+
+        // Some implementations of this algorithm set the tau value to -1 to indicate no correct tau
+        // value was found. This implementation will just return the last tau.
+
+        return tau;
     }
 
     private void parabolicInterpolation(final short[] wave) {

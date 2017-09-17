@@ -1,4 +1,4 @@
-package com.chrynan.android_guitar_tuner.tuner;
+package com.chrynan.android_guitar_tuner.tuner.config;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
