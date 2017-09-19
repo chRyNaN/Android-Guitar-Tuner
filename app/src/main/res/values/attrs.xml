@@ -8,5 +8,6 @@
         <attr name="inTuneColor" format="color"/>
         <attr name="outOfTuneColor" format="color"/>
         <attr name="showShadows" format="boolean"/>
+        <attr name="showTuningState" format="boolean"/>
     </declare-styleable>
 </resources>

@@ -1,11 +1,7 @@
 package com.chrynan.android_guitar_tuner.presenter;
 
 import com.chrynan.android_guitar_tuner.tuner.Tuner;
-import com.chrynan.android_guitar_tuner.ui.TuningState;
 import com.chrynan.android_guitar_tuner.ui.view.TunerView;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -16,11 +12,7 @@ public class TunerPresenter implements Presenter {
     private final TunerView view;
     private final Tuner tuner;
 
-    private final Map<String, Integer> notes = new HashMap<>();
-
     private Disposable disposable;
-
-    private float angleInterval;
 
     private double lastFrequency;
 
@@ -34,14 +26,6 @@ public class TunerPresenter implements Presenter {
         // No Operation
     }
 
-    public void setNotes(final String[] noteNames) {
-        for (int i = 0; i < noteNames.length; i++) {
-            notes.put(noteNames[i], i);
-        }
-
-        angleInterval = (float) Math.toRadians(360 / notes.size());
-    }
-
     public void startListeningForNotes() {
         disposable = tuner.startListening()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,12 +33,7 @@ public class TunerPresenter implements Presenter {
                 .subscribe(note -> {
                     lastFrequency = note.getFrequency();
 
-                    int p = notes.get(note.getName());
-
-                    float angle = angleInterval * p + angleInterval * (note.getPercentOffset() / 100);
-
-                    // FIXME update this to use the correct TuningState constant if wanted
-                    view.onShowNote(note.getName(), angle, TuningState.UNDEFINED);
+                    view.onShowNote(note.getName(), note.getPercentOffset());
                 });
     }
 
