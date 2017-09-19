@@ -12,15 +12,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Dimension;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.chrynan.android_guitar_tuner.R;
-import com.chrynan.android_guitar_tuner.Radian;
-import com.chrynan.android_guitar_tuner.ui.TuningState;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +34,7 @@ import butterknife.ButterKnife;
 
 /**
  * A circular guitar tuner View. This View displays all notes, an indicator to show the current
- * note, and the current note. To change the note, call the {@link #updateNote(String, float, int)}
+ * note, and the current note. To change the note, call the {@link #updateNote(String, float)}
  * method providing the current String note representation and the angle for the indicator.
  */
 @SuppressWarnings("unused")
@@ -43,6 +46,8 @@ public class CircleTunerView extends View {
 
     private static final float RADIANS_90 = (float) Math.toRadians(90);
     private static final float RADIANS_360 = (float) Math.toRadians(360);
+
+    private static final float TUNING_STATE_FREQUENCY_THRESHOLD = 1f;
 
     private final Paint indicatorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint outerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -58,6 +63,9 @@ public class CircleTunerView extends View {
     private final PointF indicatorPoint3 = new PointF();
 
     private final List<NotePosition> notePositions = new ArrayList<>();
+
+    @Radian
+    private final float angleIntervalRadians;
 
     @Dimension
     @BindDimen(R.dimen.circle_tuner_view_default_min_size)
@@ -95,6 +103,8 @@ public class CircleTunerView extends View {
     @BindDimen(R.dimen.circle_tuner_view_default_radius)
     int shadowRadius;
 
+    private boolean showTunerState;
+
     private int centerX;
     private int centerY;
     private int innerCircleRadius;
@@ -102,8 +112,6 @@ public class CircleTunerView extends View {
     private int outerCircleWidth;
     private int indicatorBottomRadius;
     private int indicatorRadius;
-    @Radian
-    private float angleIntervalRadians;
 
     @TuningState
     private int currentState = UNDEFINED;
@@ -146,6 +154,7 @@ public class CircleTunerView extends View {
             stateInTuneCircleColor = a.getColor(R.styleable.CircleTunerView_inTuneColor, stateInTuneCircleColor);
             stateOutOfTuneCircleColor = a.getColor(R.styleable.CircleTunerView_outOfTuneColor, stateOutOfTuneCircleColor);
             showShadows = a.getBoolean(R.styleable.CircleTunerView_showShadows, false);
+            showTunerState = a.getBoolean(R.styleable.CircleTunerView_showTuningState, false);
         } finally {
             a.recycle();
         }
@@ -159,6 +168,8 @@ public class CircleTunerView extends View {
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         indicatorPath.setFillType(Path.FillType.EVEN_ODD);
+
+        angleIntervalRadians = (float) Math.toRadians(360 / notes.length);
 
         if (showShadows) {
             showShadows();
@@ -208,8 +219,6 @@ public class CircleTunerView extends View {
         int indicatorBottomWidth = s / 2;
         indicatorBottomRadius = indicatorBottomWidth / 2;
         indicatorRadius = outerCircleRadius - (indicatorBottomWidth / 2);
-
-        angleIntervalRadians = (float) Math.toRadians(360 / notes.length);
 
         Rect textBounds = new Rect();
 
@@ -321,31 +330,40 @@ public class CircleTunerView extends View {
 
     /**
      * Updates the view to display the provided note. The String note name provided will be
-     * displayed on top of the center circle. The indicator will be drawn at the angle provided.
+     * displayed on top of the center circle. The indicator will be drawn at the angle calculated.
      * The angle corresponds to the default Android View angle starting position
      * (see {@link Canvas#drawArc(float, float, float, float, float, float, boolean, Paint)}).
-     * Depending on the {@link TuningState} int provided, a background circle between the center and
-     * outer circle will be drawn either green, red, or transparent. The View is not responsible
+     * Depending on the {@link TuningState} int calculated, a background circle between the center
+     * and outer circle will be drawn either green, red, or transparent. The View is not responsible
      * for animating between values provided and the previous value.
      *
-     * @param note         The String to display that represents the current note. This should
-     *                     correspond to a value in the circle_tuner_view_notes in the Strings
-     *                     resource file. These are accessible via the {@link #getNotes()} method.
-     * @param angleRadians The angle, in radians, to display the indicator at. This value is
-     *                     computed outside of this class because the size of this view isn't
-     *                     needed and this view shouldn't be concerned with the frequency values.
-     * @param state        The integer declaring the current state of the tuner. The value states
-     *                     if the note is in tune, out of tune, or uncertain. This value should
-     *                     correspond to {@link #IN_TUNE}, {@link #OUT_OF_TUNE}, or
-     *                     {@link #UNDEFINED}.
+     * @param noteName      The String to display that represents the current note. This should
+     *                      correspond to a value in the circle_tuner_view_notes in the Strings
+     *                      resource file.
+     * @param percentOffset The percent offset used to calculate the angle, in radians, to display
+     *                      the indicator at. This value is computed outside of this class because
+     *                      the size of this view isn't needed and this view shouldn't be concerned
+     *                      with the frequency values.
      */
-    public void updateNote(@Nullable final String note, @Radian final float angleRadians, @TuningState final int state) {
-        if (angleRadians != currentAngleRadians) {
-            currentNoteName = note == null ? "" : note;
-            currentAngleRadians = angleRadians;
-            currentState = state;
+    public void updateNote(@Nullable final String noteName, final float percentOffset) {
+        int p = 0;
+        int l = notes.length;
 
-            updateAngle(angleRadians);
+        for (int i = 0; i < l; i++) {
+            if (notes[i].equals(noteName)) {
+                p = i;
+                break;
+            }
+        }
+
+        float angle = angleIntervalRadians * p + angleIntervalRadians * (percentOffset / 100);
+
+        if (angle != currentAngleRadians) {
+            currentNoteName = noteName == null ? "" : noteName;
+            currentAngleRadians = angle;
+
+            updateTuningState(percentOffset);
+            updateIndicatorAngle(angle);
         }
     }
 
@@ -367,12 +385,22 @@ public class CircleTunerView extends View {
     }
 
     /**
-     * Retrieve the note names that are displayed in this View.
+     * Retrieves whether the view is setup to display the tuning state (in tune or out of tune).
      *
-     * @return A String array representing the note names in order.
+     * @return True if the tuning state is being displayed, false otherwise.
      */
-    public String[] getNotes() {
-        return notes;
+    public boolean showTunerState() {
+        return showTunerState;
+    }
+
+    /**
+     * Sets whether to display the tuner state (in tune or out of tune).
+     *
+     * @param showTunerState boolean indicating whether to display the tuner state.
+     */
+    public void setShowTunerState(final boolean showTunerState) {
+        this.showTunerState = showTunerState;
+        invalidate();
     }
 
     @ColorInt
@@ -460,7 +488,7 @@ public class CircleTunerView extends View {
     }
 
     @Radian
-    private void updateAngle(@Radian final float angleRadians) {
+    private void updateIndicatorAngle(@Radian final float angleRadians) {
         // Outer point
         indicatorPoint1.set(centerX + (indicatorRadius * (float) Math.cos(angleRadians)),
                 centerY + (indicatorRadius * (float) Math.sin(angleRadians)));
@@ -483,6 +511,14 @@ public class CircleTunerView extends View {
     @Radian
     private float normalizeAngle(@Radian final float angleRadians) {
         return Math.abs(angleRadians) % RADIANS_360;
+    }
+
+    private void updateTuningState(final float percentOffset) {
+        currentState = TuningState.UNDEFINED;
+
+        if (showTunerState) {
+            currentState = Math.abs(percentOffset) < TUNING_STATE_FREQUENCY_THRESHOLD ? TuningState.IN_TUNE : TuningState.OUT_OF_TUNE;
+        }
     }
 
     @Nullable
@@ -640,5 +676,24 @@ public class CircleTunerView extends View {
         void setCurrentNoteName(final String currentNoteName) {
             this.currentNoteName = currentNoteName;
         }
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({TuningState.IN_TUNE, TuningState.OUT_OF_TUNE, TuningState.UNDEFINED})
+    @interface TuningState {
+
+        int IN_TUNE = 0;
+        int OUT_OF_TUNE = 1;
+        int UNDEFINED = 2;
+    }
+
+    /**
+     * An annotation identifier to indicate that a particular value is in radians. No check is done to
+     * determine if this annotation is properly used. It is mainly used for better clarity in
+     * distinguishing between radian and angle fields.
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    @Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.PARAMETER})
+    @interface Radian {
     }
 }

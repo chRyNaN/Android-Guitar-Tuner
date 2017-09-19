@@ -12,12 +12,10 @@ import android.view.animation.Interpolator;
 
 import com.chrynan.android_guitar_tuner.GuitarTunerApplication;
 import com.chrynan.android_guitar_tuner.R;
-import com.chrynan.android_guitar_tuner.Radian;
 import com.chrynan.android_guitar_tuner.di.component.DaggerTunerViewComponent;
 import com.chrynan.android_guitar_tuner.di.module.TunerViewModule;
 import com.chrynan.android_guitar_tuner.exception.MissingListenerException;
 import com.chrynan.android_guitar_tuner.presenter.TunerPresenter;
-import com.chrynan.android_guitar_tuner.ui.TuningState;
 import com.chrynan.android_guitar_tuner.ui.view.TunerView;
 import com.chrynan.android_guitar_tuner.ui.widget.CircleTunerView;
 
@@ -82,12 +80,10 @@ public class CircleGuitarTunerFragment extends BaseFragment implements TunerView
                 @Override
                 public void onGlobalLayout() {
                     circleTunerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    circleTunerView.updateNote(null, 0, TuningState.UNDEFINED);
+                    circleTunerView.updateNote(null, 0);
                 }
             });
         }
-
-        presenter.setNotes(circleTunerView.getNotes());
 
         return v;
     }
@@ -123,20 +119,17 @@ public class CircleGuitarTunerFragment extends BaseFragment implements TunerView
     }
 
     @Override
-    public void onShowNote(final String noteName, @Radian final float angleRadians, @TuningState final int tuningState) {
+    public void onShowNote(final String noteName, final float percentOffset) {
         tunerAnimator.cancel();
         tunerAnimator.removeAllUpdateListeners();
 
-        tunerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                currentAnimationValue = (float) animation.getAnimatedValue();
+        tunerAnimator.addUpdateListener(animation -> {
+            currentAnimationValue = (float) animation.getAnimatedValue();
 
-                circleTunerView.updateNote(noteName, currentAnimationValue, tuningState);
-            }
+            circleTunerView.updateNote(noteName, currentAnimationValue);
         });
 
-        tunerAnimator.setFloatValues(currentAnimationValue, angleRadians);
+        tunerAnimator.setFloatValues(currentAnimationValue, percentOffset);
         tunerAnimator.start();
     }
 
