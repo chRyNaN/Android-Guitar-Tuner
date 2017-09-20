@@ -11,6 +11,8 @@ import com.chrynan.android_guitar_tuner.tuner.converter.PCMConverter;
 import com.chrynan.android_guitar_tuner.tuner.detection.PitchDetector;
 import com.chrynan.android_guitar_tuner.tuner.detection.YINPitchDetector;
 import com.chrynan.android_guitar_tuner.tuner.note.ArrayNoteFinder;
+import com.chrynan.android_guitar_tuner.tuner.note.FrequencyFinder;
+import com.chrynan.android_guitar_tuner.tuner.note.MapFrequencyFinder;
 import com.chrynan.android_guitar_tuner.tuner.note.NoteFinder;
 import com.chrynan.android_guitar_tuner.tuner.recorder.AndroidAudioRecorder;
 import com.chrynan.android_guitar_tuner.tuner.recorder.AudioRecorder;
@@ -69,7 +71,13 @@ public class TunerViewModule {
 
     @Provides
     @FragmentScope
-    TunerPresenter provideTunerPresenter(Tuner tuner) {
-        return new TunerPresenter(view, tuner);
+    FrequencyFinder provideFrequencyFinder() {
+        return new MapFrequencyFinder();
+    }
+
+    @Provides
+    @FragmentScope
+    TunerPresenter provideTunerPresenter(Tuner tuner, FrequencyFinder frequencyFinder) {
+        return new TunerPresenter(view, tuner, frequencyFinder);
     }
 }
