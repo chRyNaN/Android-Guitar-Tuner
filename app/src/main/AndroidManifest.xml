@@ -20,13 +20,20 @@
             android:name="android.max_aspect"
             android:value="2.1"/>
 
-        <activity android:name=".ui.activity.PermissionActivity"/>
-
-        <activity android:name=".ui.activity.GuitarTunerActivity">
+        <activity
+            android:name=".ui.activity.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.activity.PermissionActivity"/>
+
+        <activity android:name=".ui.activity.GuitarTunerActivity">
+            <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
