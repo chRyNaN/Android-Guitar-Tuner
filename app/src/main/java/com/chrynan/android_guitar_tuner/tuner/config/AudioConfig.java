@@ -31,4 +31,11 @@ public interface AudioConfig {
      * @return The size of values read from the underlying waveform buffer array.
      */
     int getReadSize();
+
+    /**
+     * The audio format of the buffer array (ex: float or short).
+     *
+     * @return The format of the buffer array.
+     */
+    int getAudioFormat();
 }

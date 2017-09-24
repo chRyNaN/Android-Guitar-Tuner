@@ -52,6 +52,8 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        showGuitarTuner();
     }
 
     @Override
