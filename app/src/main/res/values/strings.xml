@@ -5,8 +5,8 @@
     <string name="permission_dialog_rationale_title">Android Guitar Tuner Needs Permission</string>
     <string name="permission_dialog_rationale_desc">The permission for Audio Recording is needed so the app can determine what note is being played. Without this permission the app cannot run.</string>
     <string name="permission_icon_content_description">An icon illustrating an audio permission rationale.</string>
-    <string name="permission_title">Tune your guitar.</string>
-    <string name="permission_description">Android Guitar Tuner uses your devices microphone to determine the pitch frequency of the note being played.</string>
+    <string name="permission_title">Tune your guitar</string>
+    <string name="permission_description">Android Guitar Tuner uses your device\'s microphone to determine the pitch frequency of the note being played.</string>
     <string name="permission_grant_access_title">Grant Access</string>
     <string name="permission_grant_access_description">Change permissions in your device\'s app settings. Give Android Guitar Tuner access to Record Audio.</string>
     <string name="permission_exit_button">Exit</string>

@@ -3,14 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/spacing_small">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/permission_title_top_margin"
         android:text="@string/permission_title"
+        android:textColor="@color/primary_text_color"
+        android:textSize="@dimen/text_size_medium"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -19,7 +24,12 @@
         android:id="@+id/descriptionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_small"
         android:text="@string/permission_description"
+        android:textColor="@color/primary_text_color"
+        android:textSize="@dimen/text_size_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
@@ -29,12 +39,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/permission_icon_content_description"
+        app:layout_constraintBottom_toTopOf="@+id/buttonTopDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"/>
 
+    <View
+        android:id="@+id/buttonTopDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/white_50_percent_transparency"
+        app:layout_constraintBottom_toTopOf="@+id/exitButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <Button
         android:id="@+id/exitButton"
+        style="@style/Button.Permission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/permission_exit_button"
@@ -45,6 +66,7 @@
 
     <Button
         android:id="@+id/permissionButton"
+        style="@style/Button.Permission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/permission_allow_button"
