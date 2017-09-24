@@ -1,14 +1,11 @@
 package com.chrynan.android_guitar_tuner.ui.fragment;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Interpolator;
 
 import com.chrynan.android_guitar_tuner.GuitarTunerApplication;
 import com.chrynan.android_guitar_tuner.R;
@@ -25,17 +22,11 @@ import butterknife.BindView;
 
 public class CircleGuitarTunerFragment extends BaseFragment implements TunerView, CircleTunerView.OnNotePressedListener {
 
-    private static final int ANIMATOR_DURATION = 200;
-    private static final int ANIMATOR_DELAY = 0;
-    private static final Interpolator ANIMATOR_INTERPOLATOR = new AccelerateDecelerateInterpolator();
-
     @BindView(R.id.circleTunerView)
     CircleTunerView circleTunerView;
 
     @Inject
     TunerPresenter presenter;
-
-    private final ValueAnimator tunerAnimator = ValueAnimator.ofFloat(0, 0);
 
     private OnPlayNoteListener listener;
 
@@ -69,10 +60,6 @@ public class CircleGuitarTunerFragment extends BaseFragment implements TunerView
         View v = inflateAndBindView(inflater, R.layout.fragment_circle_guitar_tuner, container, false);
 
         circleTunerView.setOnNotePressedListener(this);
-
-        tunerAnimator.setDuration(ANIMATOR_DURATION);
-        tunerAnimator.setStartDelay(ANIMATOR_DELAY);
-        tunerAnimator.setInterpolator(ANIMATOR_INTERPOLATOR);
 
         // Set the initial pointer position to zero if this is the first time loading the view
         if (savedInstanceState == null) {
@@ -120,17 +107,9 @@ public class CircleGuitarTunerFragment extends BaseFragment implements TunerView
 
     @Override
     public void onShowNote(final String noteName, final float percentOffset) {
-        tunerAnimator.cancel();
-        tunerAnimator.removeAllUpdateListeners();
-
-        tunerAnimator.addUpdateListener(animation -> {
-            currentAnimationValue = (float) animation.getAnimatedValue();
-
-            circleTunerView.updateNote(noteName, currentAnimationValue);
-        });
-
-        tunerAnimator.setFloatValues(currentAnimationValue, percentOffset);
-        tunerAnimator.start();
+        if (circleTunerView != null) {
+            circleTunerView.updateNote(noteName, percentOffset);
+        }
     }
 
     @Override
