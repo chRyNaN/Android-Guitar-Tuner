@@ -53,9 +53,11 @@ public class CircleTunerView extends View {
     private final Paint outerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint stateCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint innerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
+    private final Paint centerTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
 
     private final RectF outerCircleBounds = new RectF();
+    private final Rect textBounds = new Rect();
 
     private final Path indicatorPath = new Path();
     private final PointF indicatorPoint1 = new PointF();
@@ -112,6 +114,7 @@ public class CircleTunerView extends View {
     private int outerCircleWidth;
     private int indicatorBottomRadius;
     private int indicatorRadius;
+    private float centerTextY;
 
     @TuningState
     private int currentState = UNDEFINED;
@@ -159,6 +162,7 @@ public class CircleTunerView extends View {
             a.recycle();
         }
 
+        // Setup the paint objects
         indicatorPaint.setColor(indicatorColor);
         outerCirclePaint.setColor(outerCircleColor);
         outerCirclePaint.setStyle(Paint.Style.STROKE);
@@ -166,6 +170,8 @@ public class CircleTunerView extends View {
         innerCirclePaint.setColor(innerCircleColor);
         textPaint.setColor(textColor);
         textPaint.setTextAlign(Paint.Align.CENTER);
+        centerTextPaint.setColor(textColor);
+        centerTextPaint.setTextAlign(Paint.Align.CENTER);
 
         indicatorPath.setFillType(Path.FillType.EVEN_ODD);
 
@@ -202,6 +208,7 @@ public class CircleTunerView extends View {
 
         outerCirclePaint.setStrokeWidth(outerCircleWidth);
         textPaint.setTextSize(outerCircleWidth / 2);
+        centerTextPaint.setTextSize(2 * (outerCircleWidth / 2));
 
         // In order to draw a donut shape (circle without the center) we need to use a style of
         // STOKE on the paint and offset the bounds to end the stroke at the radius.
@@ -220,8 +227,6 @@ public class CircleTunerView extends View {
         indicatorBottomRadius = indicatorBottomWidth / 2;
         indicatorRadius = outerCircleRadius - (indicatorBottomWidth / 2);
 
-        Rect textBounds = new Rect();
-
         // Calculate the position of the outer text
         notePositions.clear();
 
@@ -235,8 +240,11 @@ public class CircleTunerView extends View {
             // horizontally and since each text height is different, it needs to be done per text
             textPaint.getTextBounds(name, 0, name.length(), textBounds);
 
+            // Offset the text bounds since getTextBounds will return negative results
+            textBounds.offsetTo(0, 0);
+
             // Offset y by half the height of the text to vertically center it
-            notePositions.add(new NotePosition(name, textX, textY + (textBounds.height() / 2)));
+            notePositions.add(new NotePosition(name, textX, textY + textBounds.exactCenterY()));
         }
     }
 
@@ -268,7 +276,7 @@ public class CircleTunerView extends View {
         canvas.drawCircle(centerX, centerY, innerCircleRadius, innerCirclePaint);
 
         // Draw the text on the inner circle
-        canvas.drawText(currentNoteName, centerX, centerY, textPaint);
+        canvas.drawText(currentNoteName, centerX, centerTextY, centerTextPaint);
     }
 
     @Override
@@ -359,7 +367,18 @@ public class CircleTunerView extends View {
         float angle = angleIntervalRadians * p + angleIntervalRadians * (percentOffset / 100);
 
         if (angle != currentAngleRadians) {
-            currentNoteName = noteName == null ? "" : noteName;
+            if (!currentNoteName.equals(noteName)) {
+                currentNoteName = noteName == null ? "" : noteName;
+
+                // Unfortunately we have to recalculate the height of the text to properly align it in the center.
+                // This can be rather slow
+                centerTextPaint.getTextBounds(currentNoteName, 0, currentNoteName.length(), textBounds);
+
+                textBounds.offsetTo(0, 0);
+
+                centerTextY = centerY + textBounds.exactCenterY();
+            }
+
             currentAngleRadians = angle;
 
             updateTuningState(percentOffset);
