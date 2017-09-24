@@ -2,7 +2,6 @@ package com.chrynan.android_guitar_tuner.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -10,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 
 import com.chrynan.android_guitar_tuner.R;
 import com.chrynan.android_guitar_tuner.exception.MissingListenerException;
-import com.chrynan.android_guitar_tuner.ui.fragment.CircleGuitarTunerFragment;
 
 /**
  * A {@link DialogFragment} that displays more information on why the AUDIO_RECORD permission is
@@ -45,28 +43,17 @@ public class PermissionRationalDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.permission_rationale_title)
-                .setMessage(R.string.permission_rationale_desc)
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        listener.onDialogCanceled();
-                    }
+                .setTitle(R.string.permission_dialog_rationale_title)
+                .setMessage(R.string.permission_dialog_rationale_desc)
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    dialog.dismiss();
+                    listener.onDialogCanceled();
                 })
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        listener.onDialogProceed();
-                    }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
+                    listener.onDialogProceed();
                 })
-                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        listener.onDialogDismissed();
-                    }
-                })
+                .setOnDismissListener(dialog -> listener.onDialogDismissed())
                 .create();
     }
 
