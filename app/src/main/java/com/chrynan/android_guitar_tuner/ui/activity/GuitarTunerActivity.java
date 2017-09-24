@@ -1,6 +1,7 @@
 package com.chrynan.android_guitar_tuner.ui.activity;
 
-import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,24 +12,20 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.chrynan.android_guitar_tuner.R;
-import com.chrynan.android_guitar_tuner.ui.dialog.PermissionRationalDialogFragment;
 import com.chrynan.android_guitar_tuner.ui.fragment.CircleGuitarTunerFragment;
 import com.chrynan.android_guitar_tuner.ui.fragment.PitchPlayerFragment;
 import com.chrynan.android_guitar_tuner.ui.transition.CircularRevealTransition;
 import com.chrynan.android_guitar_tuner.ui.view.TunerPitchToggleView;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class GuitarTunerActivity extends AppCompatActivity implements TunerPitchToggleView,
-        CircleGuitarTunerFragment.OnPlayNoteListener,
-        PermissionRationalDialogFragment.DialogListener {
+        CircleGuitarTunerFragment.OnPlayNoteListener {
+
+    public static Intent newIntent(final Context context) {
+        return new Intent(context, GuitarTunerActivity.class);
+    }
 
     private static final int TRANSITION_DURATION = 500;
     private static final int TRANSITION_DELAY = 0;
@@ -38,7 +35,6 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
     Toolbar toolbar;
 
     private final CircleGuitarTunerFragment circleGuitarTunerFragment = CircleGuitarTunerFragment.newInstance();
-    private final PermissionRationalDialogFragment permissionRationalDialogFragment = PermissionRationalDialogFragment.newInstance();
 
     private final CircularRevealTransition circularRevealTransition = new CircularRevealTransition()
             .setDuration(TRANSITION_DURATION)
@@ -46,8 +42,6 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
             .setInterpolator(TRANSITION_INTERPOLATOR);
 
     private boolean showBack;
-
-    private PermissionToken token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +52,6 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
-        handlePermissions();
     }
 
     @Override
@@ -109,54 +101,6 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
     @Override
     public void onPlayNote(final String noteName, final double frequency, final float x, final float y) {
         showPitchPlayback(noteName, frequency, x, y);
-    }
-
-    @Override
-    public void onDialogProceed() {
-        if (token != null) {
-            token.continuePermissionRequest();
-        }
-    }
-
-    @Override
-    public void onDialogCanceled() {
-        if (token != null) {
-            token.cancelPermissionRequest();
-        }
-
-        finish();
-    }
-
-    @Override
-    public void onDialogDismissed() {
-        if (token != null) {
-            token.cancelPermissionRequest();
-        }
-
-        finish();
-    }
-
-    private void handlePermissions() {
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.RECORD_AUDIO)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                        getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, circleGuitarTunerFragment).commit();
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        GuitarTunerActivity.this.finish();
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                        GuitarTunerActivity.this.token = token;
-                        permissionRationalDialogFragment.show(getSupportFragmentManager(), PermissionRationalDialogFragment.TAG);
-                    }
-                })
-                .check();
     }
 
     private void updateNavBar(final boolean showBackButton) {
