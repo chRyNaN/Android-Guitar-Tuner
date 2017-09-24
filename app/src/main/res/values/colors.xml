@@ -5,6 +5,7 @@
     <color name="primary_dark_color">#212121</color>
     <color name="accent_color">#85D52C</color>
     <color name="primary_text_color">@color/white</color>
+    <color name="secondary_text_color">@color/primary_dark_color</color>
 
     <color name="white">#FFFFFF</color>
     <color name="white_50_percent_transparency">#80FFFFFF</color>

@@ -42,7 +42,7 @@ public class PermissionRationalDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(getActivity(), R.style.PermissionDialog)
                 .setTitle(R.string.permission_dialog_rationale_title)
                 .setMessage(R.string.permission_dialog_rationale_desc)
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
