@@ -16,7 +16,6 @@ public class AndroidAudioRecorder implements AudioRecorder {
 
     private static final int AUDIO_RECORD_AUDIO_SOURCE = MediaRecorder.AudioSource.DEFAULT;
     private static final int AUDIO_RECORD_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_DEFAULT;
-    private static final int AUDIO_RECORD_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
 
     private final Converter converter;
     private final AudioRecord audioRecorder;
@@ -27,7 +26,7 @@ public class AndroidAudioRecorder implements AudioRecorder {
     public AndroidAudioRecorder(final AudioConfig audioConfig, final Converter converter) {
         this.converter = converter;
         this.audioRecorder = new AudioRecord(AUDIO_RECORD_AUDIO_SOURCE, audioConfig.getSampleRate(),
-                AUDIO_RECORD_CHANNEL_CONFIG, AUDIO_RECORD_AUDIO_FORMAT, audioConfig.getBufferSize());
+                AUDIO_RECORD_CHANNEL_CONFIG, audioConfig.getAudioFormat(), audioConfig.getBufferSize());
         this.readSize = audioConfig.getReadSize();
         this.buffer = new short[readSize];
         this.floatBuffer = new float[readSize];
