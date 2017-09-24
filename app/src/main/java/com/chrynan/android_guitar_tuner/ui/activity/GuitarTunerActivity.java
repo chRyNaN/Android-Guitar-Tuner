@@ -3,6 +3,7 @@ package com.chrynan.android_guitar_tuner.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.transition.TransitionManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -116,6 +117,10 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
 
     private void updateNavBar(final boolean showBackButton) {
         showBack = showBackButton;
+
+        if (toolbar != null) {
+            TransitionManager.beginDelayedTransition(toolbar);
+        }
 
         invalidateOptionsMenu();
     }
