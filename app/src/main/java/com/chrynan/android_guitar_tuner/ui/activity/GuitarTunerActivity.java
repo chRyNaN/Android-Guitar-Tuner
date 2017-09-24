@@ -80,6 +80,15 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
     }
 
     @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentByTag(PitchPlayerFragment.TAG) != null) {
+            showGuitarTuner();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void showGuitarTuner() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, circleGuitarTunerFragment).commit();
 
@@ -95,7 +104,7 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
         fragment.setEnterTransition(circularRevealTransition);
         fragment.setExitTransition(circularRevealTransition);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment, PitchPlayerFragment.TAG).commit();
 
         updateNavBar(true);
     }
