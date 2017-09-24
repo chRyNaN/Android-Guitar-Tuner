@@ -3,21 +3,19 @@ package com.chrynan.android_guitar_tuner.ui.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.chrynan.android_guitar_tuner.R;
 import com.chrynan.android_guitar_tuner.ui.dialog.PermissionRationalDialogFragment;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +27,9 @@ public class PermissionActivity extends AppCompatActivity implements PermissionR
         return new Intent(context, PermissionActivity.class);
     }
 
+    private static final String USER_DENIED_PERMISSION_KEY = "userDeniedPermission";
+    private static final int RECORD_AUDIO_PERMISSION_REQUEST_CODE = 0;
+
     @BindView(R.id.titleTextView)
     TextView titleTextView;
     @BindView(R.id.descriptionTextView)
@@ -37,8 +38,6 @@ public class PermissionActivity extends AppCompatActivity implements PermissionR
     Button permissionButton;
 
     private final PermissionRationalDialogFragment permissionRationalDialogFragment = PermissionRationalDialogFragment.newInstance();
-
-    private PermissionToken token;
 
     private boolean userDeniedPermission;
 
@@ -49,27 +48,66 @@ public class PermissionActivity extends AppCompatActivity implements PermissionR
         setContentView(R.layout.activity_permission);
 
         ButterKnife.bind(this);
+
+        if (savedInstanceState != null) {
+            userDeniedPermission = savedInstanceState.getBoolean(USER_DENIED_PERMISSION_KEY, false);
+        }
+
+        // Show the correct text according to the userDeniedPermission field.
+        // This helps to retain state across orientation changes.
+        if (userDeniedPermission) {
+            titleTextView.setText(R.string.permission_grant_access_title);
+            descriptionTextView.setText(R.string.permission_grant_access_description);
+            permissionButton.setText(R.string.permission_settings_button);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Check if we now have the right permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            // We have the right permissions, so move on to the Guitar Tuner Activity
+            onPermissionGranted();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        // Handle the results of the permissions request
+        if (requestCode == RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                onPermissionGranted();
+            } else {
+                onPermissionDenied();
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        // Save the user denied boolean field
+        if (savedInstanceState != null) {
+            savedInstanceState.putBoolean(USER_DENIED_PERMISSION_KEY, userDeniedPermission);
+        }
     }
 
     @Override
     public void onDialogProceed() {
-        if (token != null) {
-            token.continuePermissionRequest();
-        }
+        requestPermissions();
     }
 
     @Override
     public void onDialogCanceled() {
-        if (token != null) {
-            token.cancelPermissionRequest();
-        }
+        // Dialog canceled - no operation
     }
 
     @Override
     public void onDialogDismissed() {
-        if (token != null) {
-            token.cancelPermissionRequest();
-        }
+        // Dialog dismissed - no operation
     }
 
     @OnClick(R.id.exitButton)
@@ -88,40 +126,35 @@ public class PermissionActivity extends AppCompatActivity implements PermissionR
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             startActivity(intent);
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+            // Show more details about the permissions being requested
+            onPermissionRationaleShouldBeShown();
         } else {
             // Open the permission dialog
-            handlePermissions();
+            requestPermissions();
         }
     }
 
-    private void handlePermissions() {
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.RECORD_AUDIO)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                        // Go to the Guitar Tuner Activity
-                        startActivity(GuitarTunerActivity.newIntent(PermissionActivity.this));
-                        finish();
-                    }
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, RECORD_AUDIO_PERMISSION_REQUEST_CODE);
+    }
 
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        // Show the grant access message
-                        titleTextView.setText(R.string.permission_grant_access_title);
-                        descriptionTextView.setText(R.string.permission_grant_access_description);
-                        permissionButton.setText(R.string.permission_settings_button);
-                        userDeniedPermission = true;
-                    }
+    private void onPermissionGranted() {
+        // Go to the Guitar Tuner Activity
+        startActivity(GuitarTunerActivity.newIntent(PermissionActivity.this));
+        finish();
+    }
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                        // Show more information about the permission needed to the user
-                        PermissionActivity.this.token = token;
-                        permissionRationalDialogFragment.show(getSupportFragmentManager(), PermissionRationalDialogFragment.TAG);
-                    }
-                })
-                .onSameThread()
-                .check();
+    private void onPermissionDenied() {
+        // Show the grant access message
+        titleTextView.setText(R.string.permission_grant_access_title);
+        descriptionTextView.setText(R.string.permission_grant_access_description);
+        permissionButton.setText(R.string.permission_settings_button);
+        userDeniedPermission = true;
+    }
+
+    private void onPermissionRationaleShouldBeShown() {
+        // Show more information about the permission needed to the user
+        permissionRationalDialogFragment.show(getSupportFragmentManager(), PermissionRationalDialogFragment.TAG);
     }
 }

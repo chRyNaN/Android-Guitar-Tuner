@@ -15,6 +15,11 @@
         <item name="android:windowBackground">@drawable/splash_screen_background</item>
     </style>
 
+    <style name="PermissionDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/secondary_text_color</item>
+        <item name="android:colorAccent">@color/accent_color</item>
+    </style>
+
     <!-- Button Styles -->
 
     <style name="Button" parent="Base.TextAppearance.AppCompat.Button">
