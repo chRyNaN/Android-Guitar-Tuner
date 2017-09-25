@@ -7,5 +7,5 @@ public interface TunerPitchToggleView {
 
     void showGuitarTuner();
 
-    void showPitchPlayback(String note, double frequency, float x, float y);
+    void showPitchPlayback(String note, double frequency, float x, float y, boolean animate);
 }

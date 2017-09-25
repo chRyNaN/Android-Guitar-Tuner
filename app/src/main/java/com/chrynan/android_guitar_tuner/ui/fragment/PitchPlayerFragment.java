@@ -18,6 +18,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 public class PitchPlayerFragment extends BaseFragment implements PitchView {
+
+    public static final String TAG = "PitchPlayerFragment";
+    public static final String TITLE = "Pitch Playback";
+
     private static final String KEY_NOTE = "Note";
     private static final String KEY_FREQUENCY = "Frequency";
 

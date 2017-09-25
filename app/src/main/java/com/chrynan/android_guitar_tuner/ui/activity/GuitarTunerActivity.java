@@ -3,6 +3,7 @@ package com.chrynan.android_guitar_tuner.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.transition.TransitionManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,10 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
         return new Intent(context, GuitarTunerActivity.class);
     }
 
+    private static final String SHOW_PITCH_PLAYER_KEY = "showPitchPlayer";
+    private static final String NOTE_NAME_KEY = "noteName";
+    private static final String FREQUENCY_KEY = "frequency";
+
     private static final int TRANSITION_DURATION = 500;
     private static final int TRANSITION_DELAY = 0;
     private static final Interpolator TRANSITION_INTERPOLATOR = new AccelerateDecelerateInterpolator();
@@ -41,7 +46,9 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
             .setStartDelay(TRANSITION_DELAY)
             .setInterpolator(TRANSITION_INTERPOLATOR);
 
-    private boolean showBack;
+    private boolean showPitchPlayer;
+    private String lastNoteName = "";
+    private double lastFrequency = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +60,20 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
 
         setSupportActionBar(toolbar);
 
-        showGuitarTuner();
+        String noteName = "";
+        double frequency = 0;
+
+        if (savedInstanceState != null) {
+            showPitchPlayer = savedInstanceState.getBoolean(SHOW_PITCH_PLAYER_KEY, false);
+            noteName = savedInstanceState.getString(NOTE_NAME_KEY, "");
+            frequency = savedInstanceState.getDouble(FREQUENCY_KEY);
+        }
+
+        if (showPitchPlayer) {
+            showPitchPlayback(noteName, frequency, 0, 0, false);
+        } else {
+            showGuitarTuner();
+        }
     }
 
     @Override
@@ -61,7 +81,13 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(showBack);
+            actionBar.setDisplayHomeAsUpEnabled(showPitchPlayer);
+
+            if (showPitchPlayer) {
+                actionBar.setTitle(PitchPlayerFragment.TITLE);
+            } else {
+                actionBar.setTitle(CircleGuitarTunerFragment.TITLE);
+            }
         }
 
         return true;
@@ -80,6 +106,27 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
     }
 
     @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentByTag(PitchPlayerFragment.TAG) != null) {
+            showGuitarTuner();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        // Save the user denied boolean field
+        if (savedInstanceState != null) {
+            savedInstanceState.putBoolean(SHOW_PITCH_PLAYER_KEY, showPitchPlayer);
+            savedInstanceState.putString(NOTE_NAME_KEY, lastNoteName);
+            savedInstanceState.putDouble(FREQUENCY_KEY, lastFrequency);
+        }
+    }
+
+    @Override
     public void showGuitarTuner() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, circleGuitarTunerFragment).commit();
 
@@ -87,26 +134,35 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
     }
 
     @Override
-    public void showPitchPlayback(final String noteName, final double frequency, final float x, final float y) {
+    public void showPitchPlayback(final String noteName, final double frequency, final float x, final float y, final boolean animate) {
+        lastNoteName = noteName;
+        lastFrequency = frequency;
+
         PitchPlayerFragment fragment = PitchPlayerFragment.newInstance(noteName, frequency);
 
-        circularRevealTransition.setCenter((int) x, (int) y);
+        if (animate) {
+            circularRevealTransition.setCenter((int) x, (int) y);
 
-        fragment.setEnterTransition(circularRevealTransition);
-        fragment.setExitTransition(circularRevealTransition);
+            fragment.setEnterTransition(circularRevealTransition);
+            fragment.setExitTransition(circularRevealTransition);
+        }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment, PitchPlayerFragment.TAG).commit();
 
         updateNavBar(true);
     }
 
     @Override
     public void onPlayNote(final String noteName, final double frequency, final float x, final float y) {
-        showPitchPlayback(noteName, frequency, x, y);
+        showPitchPlayback(noteName, frequency, x, y, true);
     }
 
-    private void updateNavBar(final boolean showBackButton) {
-        showBack = showBackButton;
+    private void updateNavBar(final boolean showingPitchPlayer) {
+        showPitchPlayer = showingPitchPlayer;
+
+        if (toolbar != null) {
+            TransitionManager.beginDelayedTransition(toolbar);
+        }
 
         invalidateOptionsMenu();
     }
