@@ -3,16 +3,10 @@ package com.chrynan.android_guitar_tuner.tuner.note;
 /**
  * An Array implementation of the {@link NoteFinder} interface. Note that this implementation may
  * produce incorrect results if the provided frequency is out of range (5587.65 to 16.3516).
- * However, this should be more than sufficient for a Guitar Tuner Application. Results are rounded
- * to the second decimal place (3520.00). Internally this implementation uses a Quicksort algorithm
- * variant on a predefined array of supported frequencies. This leads to an average O(log(n)) time
- * complexity. TODO Add tests.
+ * However, this should be more than sufficient for a Guitar Tuner Application.
+ * TODO Make this more performant. Right now it runs in linear time O(n).
  */
 public class ArrayNoteFinder implements NoteFinder {
-
-    private static final double F0_440_HZ = 440.00;
-    private static final int F0_INDEX = 44;
-    private static final double TWELTH_ROOT_OF_2 = Math.pow(2, 1 / 12);
 
     private final double[] noteFrequencies = new double[]{5587.65, 5274.04, 4978.03, 4698.64, 4434.92,
             4186.01, 3951.07, 3729.31, 3520.00, 3322.44, 3135.96, 2959.96, 2793.83, 2637.02, 2489.02,
@@ -37,23 +31,44 @@ public class ArrayNoteFinder implements NoteFinder {
 
     @Override
     public void setFrequency(final double frequency) {
-        int frequencyIndex = getFrequencyIndex(frequency);
+        int length = noteFrequencies.length;
+        int frequencyIndex = 0;
+        int nextClosestIndex = 0;
+
+        // Iterate through the note array to find the closest indices
+        for (int i = 0, j = 1; i < length && j < length; i++, j++) {
+            if (i == 0 && frequency > noteFrequencies[i]) {
+                frequencyIndex = 0;
+                nextClosestIndex = 0;
+                break;
+            } else if (noteFrequencies[i] >= frequency && frequency > noteFrequencies[j]) {
+                frequencyIndex = (noteFrequencies[i] - frequency) < (frequency - noteFrequencies[j]) ? i : j;
+                nextClosestIndex = frequencyIndex == i ? j : i;
+                break;
+            } else if (j == length - 1) {
+                frequencyIndex = length - 1;
+                nextClosestIndex = length - 1;
+            }
+        }
 
         // Get the name of the note
         noteName = noteNames[frequencyIndex % noteNames.length];
 
-        // Get the percentage difference
+        // Get the difference
         double difference = frequency - noteFrequencies[frequencyIndex];
 
-        // Equation: fn = f0 * (a)^n, where a = (2)^1/12
-        int n = (difference < 0 ? frequencyIndex - 1 : frequencyIndex + 1) - F0_INDEX;
-
-        double nextClosestFrequency = F0_440_HZ * Math.pow(TWELTH_ROOT_OF_2, n);
+        double nextClosestFrequency = noteFrequencies[nextClosestIndex];
 
         if (difference < 0) {
-            percentDiff = (float) (((frequency - nextClosestFrequency) * 100) / (noteFrequencies[frequencyIndex] - nextClosestFrequency));
+            percentDiff = (float) (((frequency - nextClosestFrequency) / (noteFrequencies[frequencyIndex] - nextClosestFrequency)) * 100);
         } else {
-            percentDiff = (float) (((frequency - noteFrequencies[frequencyIndex]) * 100) / (nextClosestFrequency - noteFrequencies[frequencyIndex]));
+            percentDiff = (float) -(((frequency - noteFrequencies[frequencyIndex]) / (nextClosestFrequency - noteFrequencies[frequencyIndex])) * 100);
+        }
+
+        if (percentDiff < -100) {
+            percentDiff = -100;
+        } else if (percentDiff > 100) {
+            percentDiff = 100;
         }
     }
 
@@ -65,27 +80,5 @@ public class ArrayNoteFinder implements NoteFinder {
     @Override
     public float getPercentageDifference() {
         return percentDiff;
-    }
-
-    private int getFrequencyIndex(final double frequency) {
-        return getClosestFrequencyIndex(frequency, 0, noteFrequencies.length - 1);
-    }
-
-    private int getClosestFrequencyIndex(final double frequency, int startIndex, int endIndex) {
-        if (startIndex == endIndex - 1) {
-            double startDiff = frequency - noteFrequencies[startIndex];
-            double endDiff = frequency - noteFrequencies[endIndex];
-
-            return startDiff < endDiff ? startIndex : endIndex;
-        }
-
-        int pivot = (startIndex + endIndex) / 2;
-        double pivotValue = noteFrequencies[pivot];
-
-        if (frequency < pivotValue) {
-            return getClosestFrequencyIndex(frequency, startIndex, pivot);
-        } else {
-            return getClosestFrequencyIndex(frequency, pivot, endIndex);
-        }
     }
 }
