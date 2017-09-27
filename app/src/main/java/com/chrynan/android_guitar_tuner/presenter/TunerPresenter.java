@@ -2,6 +2,7 @@ package com.chrynan.android_guitar_tuner.presenter;
 
 import com.chrynan.android_guitar_tuner.tuner.Tuner;
 import com.chrynan.android_guitar_tuner.tuner.note.FrequencyFinder;
+import com.chrynan.android_guitar_tuner.tuner.note.NoteName;
 import com.chrynan.android_guitar_tuner.ui.view.TunerView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -41,6 +42,6 @@ public class TunerPresenter implements Presenter {
     }
 
     public void notePressed(final String noteName, final float x, final float y) {
-        view.onPlayNote(noteName, frequencyFinder.getFrequency(FrequencyFinder.NoteName.getFor(noteName)), x, y);
+        view.onPlayNote(noteName, frequencyFinder.getFrequency(NoteName.getFor(noteName)), x, y);
     }
 }
