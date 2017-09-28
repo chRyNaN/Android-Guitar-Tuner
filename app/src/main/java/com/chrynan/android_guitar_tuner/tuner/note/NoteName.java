@@ -25,7 +25,7 @@ public enum NoteName {
      * @param name The String name.
      * @return A {@link NoteName} representing the provided String name.
      */
-    public static NoteName getFor(final String name) {
+    public static NoteName forName(final String name) {
         if (name != null) {
             String updatedName = name.trim().toUpperCase().replace('#', '♯');
 

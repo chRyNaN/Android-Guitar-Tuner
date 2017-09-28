@@ -42,6 +42,6 @@ public class TunerPresenter implements Presenter {
     }
 
     public void notePressed(final String noteName, final float x, final float y) {
-        view.onPlayNote(noteName, frequencyFinder.getFrequency(NoteName.getFor(noteName)), x, y);
+        view.onPlayNote(noteName, frequencyFinder.getFrequency(NoteName.forName(noteName)), x, y);
     }
 }
