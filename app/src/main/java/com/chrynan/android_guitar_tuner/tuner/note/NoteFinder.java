@@ -2,7 +2,9 @@ package com.chrynan.android_guitar_tuner.tuner.note;
 
 /**
  * An interface for implementations that finds the closest note name and frequency difference
- * based on a provided frequency value.
+ * based on a provided frequency value. For efficiency reasons this doesn't return actual
+ * {@link Note} or {@link NoteName} objects (to avoid constant object allocation). However, those
+ * objects can easily be created by the result of the method calls of this interface.
  */
 public interface NoteFinder {
 
