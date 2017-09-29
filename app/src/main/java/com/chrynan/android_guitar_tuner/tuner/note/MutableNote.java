@@ -1,9 +1,9 @@
-package com.chrynan.android_guitar_tuner.tuner;
+package com.chrynan.android_guitar_tuner.tuner.note;
 
 /**
- * A package-protected mutable implementation of the {@link com.chrynan.android_guitar_tuner.tuner.Tuner.Note} interface.
+ * A mutable note implementation of the {@link NoteMutator} interface.
  */
-public class MutableNote implements Tuner.Note {
+public class MutableNote implements NoteMutator {
     private String name;
     private double frequency;
     private float percentOffset;
@@ -27,15 +27,18 @@ public class MutableNote implements Tuner.Note {
         return percentOffset;
     }
 
-    void setName(final String name) {
+    @Override
+    public void setName(final String name) {
         this.name = name;
     }
 
-    void setFrequency(final double frequency) {
+    @Override
+    public void setFrequency(final double frequency) {
         this.frequency = frequency;
     }
 
-    void setPercentOffset(final float percentOffset) {
+    @Override
+    public void setPercentOffset(final float percentOffset) {
         this.percentOffset = percentOffset;
     }
 }

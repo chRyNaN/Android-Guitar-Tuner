@@ -1,6 +1,8 @@
 package com.chrynan.android_guitar_tuner.tuner;
 
 import com.chrynan.android_guitar_tuner.tuner.detection.PitchDetector;
+import com.chrynan.android_guitar_tuner.tuner.note.MutableNote;
+import com.chrynan.android_guitar_tuner.tuner.note.Note;
 import com.chrynan.android_guitar_tuner.tuner.note.NoteFinder;
 import com.chrynan.android_guitar_tuner.tuner.recorder.AudioRecorder;
 
