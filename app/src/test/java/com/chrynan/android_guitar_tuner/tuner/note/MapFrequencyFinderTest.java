@@ -1,7 +1,4 @@
-package com.chrynan.android_guitar_tuner.note;
-
-import com.chrynan.android_guitar_tuner.tuner.note.MapFrequencyFinder;
-import com.chrynan.android_guitar_tuner.tuner.note.NoteName;
+package com.chrynan.android_guitar_tuner.tuner.note;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,8 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * A class that tests the accuracy of a
- * {@link com.chrynan.android_guitar_tuner.tuner.note.MapFrequencyFinder}.
+ * A class that tests the accuracy of a {@link MapFrequencyFinder}.
  */
 public class MapFrequencyFinderTest {
 

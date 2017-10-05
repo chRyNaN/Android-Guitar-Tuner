@@ -1,6 +1,4 @@
-package com.chrynan.android_guitar_tuner.note;
-
-import com.chrynan.android_guitar_tuner.tuner.note.ArrayNoteFinder;
+package com.chrynan.android_guitar_tuner.tuner.note;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,8 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * A class that tests the accuracy of an
- * {@link com.chrynan.android_guitar_tuner.tuner.note.ArrayNoteFinder}.
+ * A class that tests the accuracy of an {@link ArrayNoteFinder}.
  */
 public class ArrayNoteFinderTest {
 
