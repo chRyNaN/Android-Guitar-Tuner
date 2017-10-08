@@ -1,6 +1,4 @@
-package com.chrynan.android_guitar_tuner.note;
-
-import com.chrynan.android_guitar_tuner.tuner.note.NoteName;
+package com.chrynan.android_guitar_tuner.tuner.note;
 
 import org.junit.Test;
 
@@ -8,8 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 /**
- * A class that tests the accuracy of the
- * {@link com.chrynan.android_guitar_tuner.tuner.note.NoteName} class.
+ * A class that tests the accuracy of the {@link NoteName} class.
  */
 public class NoteNameTest {
 
