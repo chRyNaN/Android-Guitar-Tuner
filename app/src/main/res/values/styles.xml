@@ -5,7 +5,7 @@
         <item name="android:windowBackground">@color/primary_light_color</item>
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
-        <item name="colorAccent">@color/accent_color</item>
+        <item name="colorAccent">@color/primary_accent_color</item>
         <item name="android:textColorPrimary">@color/primary_text_color</item>
         <item name="android:navigationBarColor">@color/primary_dark_color</item>
         <item name="android:colorControlNormal">@color/white</item>
@@ -17,7 +17,7 @@
 
     <style name="PermissionDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:textColorPrimary">@color/secondary_text_color</item>
-        <item name="android:colorAccent">@color/accent_color</item>
+        <item name="android:colorAccent">@color/primary_accent_color</item>
     </style>
 
     <!-- Button Styles -->

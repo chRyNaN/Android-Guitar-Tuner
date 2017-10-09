@@ -95,6 +95,8 @@ public class CircleGuitarTunerFragment extends BaseFragment implements TunerView
     public void onDestroyView() {
         super.onDestroyView();
 
+        presenter.detachView();
+
         unbinder.unbind();
     }
 

@@ -1,6 +1,8 @@
 package com.chrynan.android_guitar_tuner.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,8 @@ public class PitchPlayerFragment extends BaseFragment implements PitchView {
 
     @BindView(R.id.noteTextView)
     TextView noteTextView;
+    @BindView(R.id.volumeStateTextView)
+    TextView volumeStateTextView;
 
     @Inject
     PitchPresenter presenter;
@@ -67,6 +71,7 @@ public class PitchPlayerFragment extends BaseFragment implements PitchView {
         super.onResume();
 
         presenter.startPlayingNote(frequency);
+        presenter.startListeningToVolumeChanges();
     }
 
     @Override
@@ -74,11 +79,14 @@ public class PitchPlayerFragment extends BaseFragment implements PitchView {
         super.onPause();
 
         presenter.stopPlayingNote();
+        presenter.stopListeningToVolumeChanges();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        presenter.detachView();
 
         unbinder.unbind();
     }
@@ -90,5 +98,12 @@ public class PitchPlayerFragment extends BaseFragment implements PitchView {
                 .pitchViewModule(new PitchViewModule(this))
                 .build()
                 .inject(this);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onUpdateVolumeState(@StringRes final int volumeStateText, @ColorRes final int textColor) {
+        volumeStateTextView.setText(volumeStateText);
+        volumeStateTextView.setTextColor(getContext().getResources().getColor(textColor));
     }
 }
