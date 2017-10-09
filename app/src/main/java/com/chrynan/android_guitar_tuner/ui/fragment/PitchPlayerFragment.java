@@ -102,7 +102,7 @@ public class PitchPlayerFragment extends BaseFragment implements PitchView {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onUpdateVolumeState(@StringRes int volumeStateText, @ColorRes int textColor) {
+    public void onUpdateVolumeState(@StringRes final int volumeStateText, @ColorRes final int textColor) {
         volumeStateTextView.setText(volumeStateText);
         volumeStateTextView.setTextColor(getContext().getResources().getColor(textColor));
     }

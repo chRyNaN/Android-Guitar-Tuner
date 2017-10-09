@@ -1,19 +1,24 @@
 package com.chrynan.android_guitar_tuner.presenter;
 
-import android.content.Context;
-
-import com.chrynan.android_guitar_tuner.di.ApplicationContext;
+import com.chrynan.android_guitar_tuner.R;
+import com.chrynan.android_guitar_tuner.tuner.volume.VolumeObserver;
+import com.chrynan.android_guitar_tuner.tuner.volume.VolumeState;
 import com.chrynan.android_guitar_tuner.ui.view.PitchView;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class PitchPresenter implements Presenter {
 
     private final PitchView view;
-    @ApplicationContext
-    private final Context applicationContext;
+    private final VolumeObserver volumeObserver;
 
-    public PitchPresenter(final PitchView view, @ApplicationContext final Context applicationContext) {
+    private Disposable volumeDisposable;
+
+    public PitchPresenter(final PitchView view, final VolumeObserver volumeObserver) {
         this.view = view;
-        this.applicationContext = applicationContext;
+        this.volumeObserver = volumeObserver;
     }
 
     @Override
@@ -30,10 +35,21 @@ public class PitchPresenter implements Presenter {
     }
 
     public void startListeningToVolumeChanges() {
-        // TODO
+        volumeDisposable = volumeObserver.startListening()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(state -> {
+                    if (state == VolumeState.MUTED) {
+                        view.onUpdateVolumeState(R.string.volume_state_muted, R.color.volume_muted);
+                    } else {
+                        view.onUpdateVolumeState(R.string.volume_state_on, R.color.volume_on);
+                    }
+                });
     }
 
     public void stopListeningToVolumeChanges() {
-        // TODO
+        if (volumeDisposable != null) {
+            volumeDisposable.dispose();
+        }
     }
 }
