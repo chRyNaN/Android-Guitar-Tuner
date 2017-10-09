@@ -13,6 +13,9 @@
     <string name="permission_settings_button">Settings</string>
     <string name="permission_allow_button">Grant</string>
 
+    <string name="volume_state_on">Volume is on.</string>
+    <string name="volume_state_muted">Volume is muted.</string>
+
     <string-array name="circle_tuner_view_notes">
         <item>C</item>
         <item>C\u266F</item>
