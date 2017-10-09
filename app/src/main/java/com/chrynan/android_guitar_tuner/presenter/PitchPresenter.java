@@ -18,7 +18,7 @@ public class PitchPresenter implements Presenter {
 
     @Override
     public void detachView() {
-
+        // No Operation
     }
 
     public void startPlayingNote(final double noteFrequency) {
@@ -26,6 +26,14 @@ public class PitchPresenter implements Presenter {
     }
 
     public void stopPlayingNote() {
+        // TODO
+    }
+
+    public void startListeningToVolumeChanges() {
+        // TODO
+    }
+
+    public void stopListeningToVolumeChanges() {
         // TODO
     }
 }
