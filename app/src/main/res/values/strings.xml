@@ -16,6 +16,14 @@
     <string name="volume_state_on">Playing</string>
     <string name="volume_state_muted">Volume is muted</string>
 
+    <string name="app_bar_action_share">Share</string>
+
+    <string name="share_app_intent_type">text/plain</string>
+    <string name="share_app_subject">@string/app_name</string>
+    <string name="share_app_description">Download %1$s and keep your guitar in tune. %2$s</string>
+    <string name="share_app_link">APP LINK GOES HERE</string>
+    <string name="share_app_intent_title">Share App Link</string>
+
     <string-array name="circle_tuner_view_notes">
         <item>C</item>
         <item>C\u266F</item>

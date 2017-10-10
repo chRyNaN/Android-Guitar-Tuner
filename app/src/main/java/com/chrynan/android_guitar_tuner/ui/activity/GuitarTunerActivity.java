@@ -2,6 +2,7 @@ package com.chrynan.android_guitar_tuner.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.transition.TransitionManager;
 import android.support.v7.app.ActionBar;
@@ -78,6 +79,8 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.guitar_tuner_activity_menu, menu);
+
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
@@ -99,6 +102,9 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 showGuitarTuner();
+                return true;
+            case R.id.shareAction:
+                shareApp();
                 return true;
         }
 
@@ -165,5 +171,15 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
         }
 
         invalidateOptionsMenu();
+    }
+
+    private void shareApp() {
+        Resources res = getResources();
+        String desc = res.getString(R.string.share_app_description, res.getString(R.string.app_name), res.getString(R.string.share_app_link));
+        Intent shareIntent = new Intent(Intent.ACTION_SEND)
+                .setType(res.getString(R.string.share_app_intent_type))
+                .putExtra(Intent.EXTRA_SUBJECT, res.getString(R.string.share_app_subject))
+                .putExtra(Intent.EXTRA_TEXT, desc);
+        startActivity(Intent.createChooser(shareIntent, res.getString(R.string.share_app_intent_title)));
     }
 }
