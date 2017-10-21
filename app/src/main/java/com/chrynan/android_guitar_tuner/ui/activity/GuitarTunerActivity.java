@@ -1,10 +1,13 @@
 package com.chrynan.android_guitar_tuner.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.transition.TransitionManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -94,6 +97,18 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
         }
 
         return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Check if we still have the correct permissions
+        // If we don't we have to close this Activity and open the Permission Activity
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
+            startActivity(PermissionActivity.newIntent(this));
+            finish();
+        }
     }
 
     @Override
