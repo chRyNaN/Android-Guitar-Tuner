@@ -12,6 +12,8 @@
 
     <color name="white">#FFFFFF</color>
     <color name="white_50_percent_transparency">#80FFFFFF</color>
+    <color name="white_25_percent_transparency">#40FFFFFF</color>
+
 
     <color name="circle_tuner_view_default_indicator_color">#FBFAFA</color>
     <color name="circle_tuner_view_default_outer_circle_color">@color/secondary_accent_color</color>
@@ -22,5 +24,8 @@
 
     <color name="volume_on">@color/primary_accent_color</color>
     <color name="volume_muted">@color/attention</color>
+
+    <color name="permission_microphone_color">@color/secondary_accent_color</color>
+    <color name="permission_circle_color">@color/white_25_percent_transparency</color>
 
 </resources>

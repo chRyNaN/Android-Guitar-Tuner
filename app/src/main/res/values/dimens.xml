@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <dimen name="spacing_small">16dp</dimen>
     <dimen name="spacing_medium">24dp</dimen>
 
@@ -15,4 +16,8 @@
     <dimen name="circle_tuner_view_default_shadow_x">5dp</dimen>
     <dimen name="circle_tuner_view_default_shadow_y">5dp</dimen>
     <dimen name="circle_tuner_view_default_radius">7dp</dimen>
+
+    <dimen name="permission_circle_size">256dp</dimen>
+    <dimen name="permission_microphone_size">256dp</dimen>
+
 </resources>

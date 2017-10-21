@@ -39,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/permission_icon_content_description"
+        android:src="@drawable/permission_graphic"
         app:layout_constraintBottom_toTopOf="@+id/buttonTopDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
