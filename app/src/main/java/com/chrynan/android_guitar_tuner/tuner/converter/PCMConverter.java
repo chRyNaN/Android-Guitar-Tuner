@@ -14,7 +14,6 @@ public class PCMConverter implements Converter {
     @Override
     public void convert(final byte[] array, final float[] convertedArray) {
         int arrayLength = array.length;
-        int convertedArrayLength = convertedArray.length;
 
         for (int i = 0, j = 0; i < arrayLength; i += 2, j++) {
 

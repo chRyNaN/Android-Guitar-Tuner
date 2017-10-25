@@ -29,11 +29,11 @@ public class YINPitchDetector implements PitchDetector {
     private static final float ABSOLUTE_THRESHOLD = 0.125f;
 
     private final double sampleRate;
-    private final short[] resultBuffer;
+    private final float[] resultBuffer;
 
     public YINPitchDetector(final AudioConfig audioConfig) {
         this.sampleRate = audioConfig.getSampleRate();
-        this.resultBuffer = new short[audioConfig.getReadSize() / 2];
+        this.resultBuffer = new float[audioConfig.getReadSize() / 2];
     }
 
     @Override
@@ -88,7 +88,7 @@ public class YINPitchDetector implements PitchDetector {
         for (j = 1; j < length; j++) {
             for (i = 0; i < length; i++) {
                 // d sub t (tau) = (x(i) - x(i - tau))^2, from i = 1 to result buffer size
-                resultBuffer[j] += Math.sqrt(wave[i] - wave[i + j]);
+                resultBuffer[j] += Math.pow((wave[i] - wave[i + j]), 2);
             }
         }
     }
@@ -152,6 +152,7 @@ public class YINPitchDetector implements PitchDetector {
 
         // Some implementations of this algorithm set the tau value to -1 to indicate no correct tau
         // value was found. This implementation will just return the last tau.
+        tau = tau >= length ? length - 1 : tau;
 
         return tau;
     }
