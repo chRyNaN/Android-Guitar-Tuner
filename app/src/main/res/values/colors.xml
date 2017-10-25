@@ -2,6 +2,7 @@
 <resources>
 
     <color name="primary_light_color">#37474F</color>
+    <color name="primary_medium_color">#B0BEC5</color>
     <color name="primary_color">#263238</color>
     <color name="primary_dark_color">#212121</color>
     <color name="primary_accent_color">#85D52C</color>
@@ -17,9 +18,9 @@
 
     <color name="circle_tuner_view_default_indicator_color">#FBFAFA</color>
     <color name="circle_tuner_view_default_outer_circle_color">@color/secondary_accent_color</color>
-    <color name="circle_tuner_view_default_inner_circle_color">#B0BEC5</color>
+    <color name="circle_tuner_view_default_inner_circle_color">@color/primary_medium_color</color>
     <color name="circle_tuner_view_default_text_color">@color/primary_text_color</color>
-    <color name="circle_tuner_view_default_in_tune_color">#85D52C</color>
+    <color name="circle_tuner_view_default_in_tune_color">@color/primary_accent_color</color>
     <color name="circle_tuner_view_default_out_of_tune_color">@color/attention</color>
 
     <color name="volume_on">@color/primary_accent_color</color>
