@@ -164,6 +164,7 @@ public class CircleTunerView extends View {
 
         // Setup the paint objects
         indicatorPaint.setColor(indicatorColor);
+        indicatorPaint.setStyle(Paint.Style.FILL);
         outerCirclePaint.setColor(outerCircleColor);
         outerCirclePaint.setStyle(Paint.Style.STROKE);
         outerCirclePaint.setStrokeCap(Paint.Cap.ROUND);
@@ -223,9 +224,8 @@ public class CircleTunerView extends View {
         // Determine the state circle radius
         stateCircleRadius = outerCircleRadius - outerCircleWidth;
 
-        int indicatorBottomWidth = s / 2;
-        indicatorBottomRadius = indicatorBottomWidth / 2;
-        indicatorRadius = outerCircleRadius - (indicatorBottomWidth / 2);
+        indicatorBottomRadius = s / 8;
+        indicatorRadius = outerCircleRadius - (outerCircleWidth / 2);
 
         // Calculate the position of the outer text
         notePositions.clear();
@@ -364,7 +364,7 @@ public class CircleTunerView extends View {
             }
         }
 
-        float angle = angleIntervalRadians * p + angleIntervalRadians * (percentOffset / 100);
+        float angle = normalizeAngle(angleIntervalRadians * p + angleIntervalRadians * (percentOffset / 100));
 
         if (angle != currentAngleRadians) {
             if (!currentNoteName.equals(noteName)) {
@@ -529,7 +529,8 @@ public class CircleTunerView extends View {
 
     @Radian
     private float normalizeAngle(@Radian final float angleRadians) {
-        return Math.abs(angleRadians) % RADIANS_360;
+        float normalizedAngle = Math.abs(angleRadians) % RADIANS_360;
+        return angleRadians < 0 ? RADIANS_360 - normalizedAngle : normalizedAngle;
     }
 
     private void updateTuningState(final float percentOffset) {
