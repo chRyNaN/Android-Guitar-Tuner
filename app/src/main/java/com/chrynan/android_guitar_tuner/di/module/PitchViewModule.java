@@ -8,6 +8,8 @@ import com.chrynan.android_guitar_tuner.di.FragmentScope;
 import com.chrynan.android_guitar_tuner.presenter.PitchPresenter;
 import com.chrynan.android_guitar_tuner.tuner.config.AndroidAudioConfig;
 import com.chrynan.android_guitar_tuner.tuner.config.AudioConfig;
+import com.chrynan.android_guitar_tuner.tuner.converter.FrequencyConverter;
+import com.chrynan.android_guitar_tuner.tuner.converter.SineWaveFrequencyConverter;
 import com.chrynan.android_guitar_tuner.tuner.player.AndroidAudioPlayer;
 import com.chrynan.android_guitar_tuner.tuner.player.AudioPlayer;
 import com.chrynan.android_guitar_tuner.tuner.volume.AndroidVolumeObserver;
@@ -45,6 +47,12 @@ public class PitchViewModule {
     @FragmentScope
     AudioConfig provideAudioConfig() {
         return new AndroidAudioConfig();
+    }
+
+    @Provides
+    @FragmentScope
+    FrequencyConverter provideFrequencyConverter(final AudioConfig audioConfig) {
+        return new SineWaveFrequencyConverter(audioConfig);
     }
 
     @Provides
