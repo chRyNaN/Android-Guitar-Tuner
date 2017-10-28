@@ -6,6 +6,10 @@ import android.media.AudioManager;
 import com.chrynan.android_guitar_tuner.di.ApplicationContext;
 import com.chrynan.android_guitar_tuner.di.FragmentScope;
 import com.chrynan.android_guitar_tuner.presenter.PitchPresenter;
+import com.chrynan.android_guitar_tuner.tuner.config.AndroidAudioConfig;
+import com.chrynan.android_guitar_tuner.tuner.config.AudioConfig;
+import com.chrynan.android_guitar_tuner.tuner.player.AndroidAudioPlayer;
+import com.chrynan.android_guitar_tuner.tuner.player.AudioPlayer;
 import com.chrynan.android_guitar_tuner.tuner.volume.AndroidVolumeObserver;
 import com.chrynan.android_guitar_tuner.tuner.volume.VolumeObserver;
 import com.chrynan.android_guitar_tuner.ui.view.PitchView;
@@ -35,6 +39,18 @@ public class PitchViewModule {
     @FragmentScope
     VolumeObserver provideVolumeObserver(final AudioManager audioManager) {
         return new AndroidVolumeObserver(audioManager);
+    }
+
+    @Provides
+    @FragmentScope
+    AudioConfig provideAudioConfig() {
+        return new AndroidAudioConfig();
+    }
+
+    @Provides
+    @FragmentScope
+    AudioPlayer provideAudioPlayer(final AudioConfig audioConfig) {
+        return new AndroidAudioPlayer(audioConfig);
     }
 
     @Provides

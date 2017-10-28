@@ -1,8 +1,6 @@
 package com.chrynan.android_guitar_tuner.tuner.recorder;
 
-import android.media.AudioFormat;
 import android.media.AudioRecord;
-import android.media.MediaRecorder;
 import android.os.Build;
 
 import com.chrynan.android_guitar_tuner.tuner.config.AudioConfig;
@@ -14,9 +12,6 @@ import com.chrynan.android_guitar_tuner.tuner.converter.Converter;
  */
 public class AndroidAudioRecorder implements AudioRecorder {
 
-    private static final int AUDIO_RECORD_AUDIO_SOURCE = MediaRecorder.AudioSource.DEFAULT;
-    private static final int AUDIO_RECORD_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_DEFAULT;
-
     private final Converter converter;
     private final AudioRecord audioRecorder;
     private final int readSize;
@@ -25,8 +20,8 @@ public class AndroidAudioRecorder implements AudioRecorder {
 
     public AndroidAudioRecorder(final AudioConfig audioConfig, final Converter converter) {
         this.converter = converter;
-        this.audioRecorder = new AudioRecord(AUDIO_RECORD_AUDIO_SOURCE, audioConfig.getSampleRate(),
-                AUDIO_RECORD_CHANNEL_CONFIG, audioConfig.getAudioFormat(), audioConfig.getBufferSize());
+        this.audioRecorder = new AudioRecord(audioConfig.getInputSource(), audioConfig.getSampleRate(),
+                audioConfig.getInputChannel(), audioConfig.getInputFormat(), audioConfig.getInputBufferSize());
         this.readSize = audioConfig.getReadSize();
         this.buffer = new short[readSize];
         this.floatBuffer = new float[readSize];
