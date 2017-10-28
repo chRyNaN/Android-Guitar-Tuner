@@ -4,7 +4,7 @@ import android.media.AudioRecord;
 import android.os.Build;
 
 import com.chrynan.android_guitar_tuner.tuner.config.AudioConfig;
-import com.chrynan.android_guitar_tuner.tuner.converter.Converter;
+import com.chrynan.android_guitar_tuner.tuner.converter.ArrayConverter;
 
 /**
  * An Android implementation of the {@link AudioRecorder} interface that works with the Android
@@ -12,13 +12,13 @@ import com.chrynan.android_guitar_tuner.tuner.converter.Converter;
  */
 public class AndroidAudioRecorder implements AudioRecorder {
 
-    private final Converter converter;
+    private final ArrayConverter converter;
     private final AudioRecord audioRecorder;
     private final int readSize;
     private final short[] buffer;
     private final float[] floatBuffer;
 
-    public AndroidAudioRecorder(final AudioConfig audioConfig, final Converter converter) {
+    public AndroidAudioRecorder(final AudioConfig audioConfig, final ArrayConverter converter) {
         this.converter = converter;
         this.audioRecorder = new AudioRecord(audioConfig.getInputSource(), audioConfig.getSampleRate(),
                 audioConfig.getInputChannel(), audioConfig.getInputFormat(), audioConfig.getInputBufferSize());

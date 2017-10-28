@@ -6,8 +6,8 @@ import com.chrynan.android_guitar_tuner.tuner.config.AndroidAudioConfig;
 import com.chrynan.android_guitar_tuner.tuner.GuitarTuner;
 import com.chrynan.android_guitar_tuner.tuner.config.AudioConfig;
 import com.chrynan.android_guitar_tuner.tuner.Tuner;
-import com.chrynan.android_guitar_tuner.tuner.converter.Converter;
-import com.chrynan.android_guitar_tuner.tuner.converter.PCMConverter;
+import com.chrynan.android_guitar_tuner.tuner.converter.ArrayConverter;
+import com.chrynan.android_guitar_tuner.tuner.converter.PCMArrayConverter;
 import com.chrynan.android_guitar_tuner.tuner.detection.PitchDetector;
 import com.chrynan.android_guitar_tuner.tuner.detection.YINPitchDetector;
 import com.chrynan.android_guitar_tuner.tuner.note.ArrayNoteFinder;
@@ -41,13 +41,13 @@ public class TunerViewModule {
 
     @Provides
     @FragmentScope
-    Converter provideConverter() {
-        return new PCMConverter();
+    ArrayConverter provideArrayConverter() {
+        return new PCMArrayConverter();
     }
 
     @Provides
     @FragmentScope
-    AudioRecorder provideAudioRecorder(AudioConfig audioConfig, Converter converter) {
+    AudioRecorder provideAudioRecorder(AudioConfig audioConfig, ArrayConverter converter) {
         return new AndroidAudioRecorder(audioConfig, converter);
     }
 

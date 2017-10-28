@@ -4,7 +4,7 @@ package com.chrynan.android_guitar_tuner.tuner.converter;
  * An interface for a class that converters byte or short arrays to a float array representing the
  * same values.
  */
-public interface Converter {
+public interface ArrayConverter {
 
     /**
      * Converts the provided byte array to a corresponding float array.
