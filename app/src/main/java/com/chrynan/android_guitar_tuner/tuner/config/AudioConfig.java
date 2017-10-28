@@ -14,7 +14,7 @@ public interface AudioConfig {
     int getSampleRate();
 
     /**
-     * The size of the underlying waveform buffer array used by the Audio Recorder. This should be
+     * The size of the underlying input waveform buffer array used by the Audio Recorder. This should be
      * larger than the value returned by {@link #getReadSize()}. This value should only be used to
      * create an instance of an Audio Recorder and when reading or performing operations on the
      * waveform buffer array, {@link #getReadSize()} should be used. Note that an implementation of
@@ -22,10 +22,21 @@ public interface AudioConfig {
      *
      * @return The size of the underlying waveform buffer array.
      */
-    int getBufferSize();
+    int getInputBufferSize();
 
     /**
-     * The size of the array of data that should be read from the buffer. Use this value when
+     * The size of the underlying output waveform buffer array used by the Audio Recorder. This should be
+     * larger than the value returned by {@link #getReadSize()}. This value should only be used to
+     * create an instance of an Audio Recorder and when reading or performing operations on the
+     * waveform buffer array, {@link #getReadSize()} should be used. Note that an implementation of
+     * this method should return a valid value for the device.
+     *
+     * @return The size of the underlying waveform buffer array.
+     */
+    int getOutputBufferSize();
+
+    /**
+     * The size of the input array of data that should be read from the buffer. Use this value when
      * processing the buffer of waveform data.
      *
      * @return The size of values read from the underlying waveform buffer array.
@@ -33,9 +44,45 @@ public interface AudioConfig {
     int getReadSize();
 
     /**
-     * The audio format of the buffer array (ex: float or short).
+     * The size of the array of data that should be written to the output buffer. Use this value when
+     * processing the buffer of waveform data.
+     *
+     * @return The size of values written to the underlying waveform buffer array.
+     */
+    int getWriteSize();
+
+    /**
+     * The input channel to retrieve the input data.
+     *
+     * @return The input channel
+     */
+    int getInputChannel();
+
+    /**
+     * The output channel to output the data.
+     *
+     * @return The output channel.
+     */
+    int getOutputChannel();
+
+    /**
+     * The input audio format of the buffer array (ex: float or short).
      *
      * @return The format of the buffer array.
      */
-    int getAudioFormat();
+    int getInputFormat();
+
+    /**
+     * The output audio format of the buffer array (ex: float or short).
+     *
+     * @return The format of the buffer array.
+     */
+    int getOutputFormat();
+
+    /**
+     * The input source of the audio data.
+     *
+     * @return The input source.
+     */
+    int getInputSource();
 }
