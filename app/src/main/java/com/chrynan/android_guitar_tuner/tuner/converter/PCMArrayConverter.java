@@ -1,13 +1,13 @@
 package com.chrynan.android_guitar_tuner.tuner.converter;
 
 /**
- * An implementation of the {@link Converter} interface that works with 16-bit PCM data.
+ * An implementation of the {@link ArrayConverter} interface that works with 16-bit PCM data.
  */
-public class PCMConverter implements Converter {
+public class PCMArrayConverter implements ArrayConverter {
 
     private static final short SHORT_DIVISOR = (short) (-1 * Short.MIN_VALUE);
 
-    public PCMConverter() {
+    public PCMArrayConverter() {
         // Default constructor
     }
 
