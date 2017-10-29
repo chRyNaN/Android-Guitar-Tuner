@@ -1,6 +1,7 @@
 package com.chrynan.android_guitar_tuner.presenter;
 
 import com.chrynan.android_guitar_tuner.R;
+import com.chrynan.android_guitar_tuner.tuner.PitchPlayer;
 import com.chrynan.android_guitar_tuner.tuner.volume.VolumeObserver;
 import com.chrynan.android_guitar_tuner.tuner.volume.VolumeState;
 import com.chrynan.android_guitar_tuner.ui.view.PitchView;
@@ -12,12 +13,15 @@ import io.reactivex.schedulers.Schedulers;
 public class PitchPresenter implements Presenter {
 
     private final PitchView view;
+    private final PitchPlayer pitchPlayer;
     private final VolumeObserver volumeObserver;
 
+    private Disposable pitchPlayerDisposable;
     private Disposable volumeDisposable;
 
-    public PitchPresenter(final PitchView view, final VolumeObserver volumeObserver) {
+    public PitchPresenter(final PitchView view, final PitchPlayer pitchPlayer, final VolumeObserver volumeObserver) {
         this.view = view;
+        this.pitchPlayer = pitchPlayer;
         this.volumeObserver = volumeObserver;
     }
 
@@ -27,11 +31,16 @@ public class PitchPresenter implements Presenter {
     }
 
     public void startPlayingNote(final double noteFrequency) {
-        // TODO
+        pitchPlayerDisposable = pitchPlayer.startPlaying(noteFrequency)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     public void stopPlayingNote() {
-        // TODO
+        if (pitchPlayerDisposable != null) {
+            pitchPlayerDisposable.dispose();
+        }
     }
 
     public void startListeningToVolumeChanges() {
