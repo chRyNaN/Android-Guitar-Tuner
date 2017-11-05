@@ -20,26 +20,32 @@ public class GuitarTuner implements Tuner {
     public GuitarTuner(final AudioRecorder audioRecorder, final PitchDetector detector, final NoteFinder finder) {
 
         // Initialize the Observable to be for listening to notes
-        observable = Observable.create(e -> {
-            audioRecorder.startRecording();
+        observable = Observable.create(emitter -> {
+            try {
+                audioRecorder.startRecording();
 
-            while (!e.isDisposed()) {
-                double frequency = detector.detect(audioRecorder.readNext());
+                while (!emitter.isDisposed()) {
+                    double frequency = detector.detect(audioRecorder.readNext());
 
-                finder.setFrequency(frequency);
+                    finder.setFrequency(frequency);
 
-                // Since the note object has mutable fields and we return the same instance,
-                // lock the object while updating its data
-                synchronized (note) {
-                    note.setFrequency(frequency);
-                    note.setName(finder.getNoteName());
-                    note.setPercentOffset(finder.getPercentageDifference());
+                    // Since the note object has mutable fields and we return the same instance,
+                    // lock the object while updating its data
+                    synchronized (note) {
+                        note.setFrequency(frequency);
+                        note.setName(finder.getNoteName());
+                        note.setPercentOffset(finder.getPercentageDifference());
+                    }
+
+                    emitter.onNext(note);
                 }
 
-                e.onNext(note);
-            }
+                audioRecorder.stopRecording();
 
-            audioRecorder.stopRecording();
+                emitter.onComplete();
+            } catch (Exception exception) {
+                emitter.tryOnError(exception);
+            }
         });
     }
 

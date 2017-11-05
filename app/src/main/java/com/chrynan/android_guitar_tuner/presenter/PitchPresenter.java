@@ -12,12 +12,16 @@ import io.reactivex.schedulers.Schedulers;
 
 public class PitchPresenter implements Presenter {
 
+    private static final int RETRY_COUNT_MAX = 3;
+
     private final PitchView view;
     private final PitchPlayer pitchPlayer;
     private final VolumeObserver volumeObserver;
 
     private Disposable pitchPlayerDisposable;
     private Disposable volumeDisposable;
+
+    private int retryCount = 0;
 
     public PitchPresenter(final PitchView view, final PitchPlayer pitchPlayer, final VolumeObserver volumeObserver) {
         this.view = view;
@@ -34,7 +38,27 @@ public class PitchPresenter implements Presenter {
         pitchPlayerDisposable = pitchPlayer.startPlaying(noteFrequency)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe();
+                .subscribe(() -> {
+                        },
+                        error -> {
+                            // TODO log error
+
+                            boolean showAction = retryCount < RETRY_COUNT_MAX;
+                            int description = showAction ? R.string.pitch_player_error_playing_note_description_with_action
+                                    : R.string.pitch_player_error_playing_note_description_without_action;
+
+                            view.onErrorPlayingNote(
+                                    description,
+                                    showAction,
+                                    R.string.pitch_player_error_playing_note_action,
+                                    R.color.snack_bar_action_color
+                            );
+                        });
+    }
+
+    public void retryPlayingNote(final double noteFrequency) {
+        retryCount++;
+        startPlayingNote(noteFrequency);
     }
 
     public void stopPlayingNote() {

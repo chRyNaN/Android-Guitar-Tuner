@@ -20,14 +20,17 @@ public class GuitarPitchPlayer implements PitchPlayer {
 
     @Override
     public Completable startPlaying(double frequency) {
-        return Completable.create(e -> {
 
-            final float[] audioData = frequencyConverter.convert(frequency);
+        return Completable.create(emitter -> {
+            try {
+                final float[] audioData = frequencyConverter.convert(frequency);
 
-            audioPlayer.setBuffer(audioData);
+                audioPlayer.setBuffer(audioData);
 
-            audioPlayer.play();
-
-        }).doFinally(audioPlayer::stop);
+                audioPlayer.play();
+            } catch (Exception exception) {
+                emitter.tryOnError(exception);
+            }
+        }).doOnEvent(event -> audioPlayer.stop());
     }
 }

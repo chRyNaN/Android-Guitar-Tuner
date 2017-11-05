@@ -9,4 +9,6 @@ import android.support.annotation.StringRes;
 public interface PitchView {
 
     void onUpdateVolumeState(@StringRes int volumeStateText, @ColorRes int textColor);
+
+    void onErrorPlayingNote(@StringRes int errorDescription, boolean showAction, @StringRes int errorAction, @ColorRes int actionColor);
 }

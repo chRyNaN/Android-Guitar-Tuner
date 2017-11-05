@@ -24,6 +24,10 @@
     <string name="share_app_link">APP LINK GOES HERE</string>
     <string name="share_app_intent_title">Share App Link</string>
 
+    <string name="pitch_player_error_playing_note_description_with_action">Unexpected error.</string>
+    <string name="pitch_player_error_playing_note_description_without_action">Unexpected error. Please try again later.</string>
+    <string name="pitch_player_error_playing_note_action">Retry</string>
+
     <string-array name="circle_tuner_view_notes">
         <item>C</item>
         <item>C\u266F</item>
