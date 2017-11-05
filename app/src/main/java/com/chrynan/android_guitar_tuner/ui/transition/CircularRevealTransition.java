@@ -16,7 +16,6 @@ public class CircularRevealTransition extends Visibility {
 
     private int x;
     private int y;
-    private float radius;
 
     public CircularRevealTransition() {
         // Default Constructor
@@ -51,7 +50,7 @@ public class CircularRevealTransition extends Visibility {
 
             float radius = (float) Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
 
-            return ViewAnimationUtils.createCircularReveal(view, x, y, 0, radius);
+            return new NoPauseAnimatorWrapper(ViewAnimationUtils.createCircularReveal(view, x, y, 0, radius));
         }
 
         return null;
@@ -65,12 +64,13 @@ public class CircularRevealTransition extends Visibility {
 
             float radius = (float) Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
 
-            return ViewAnimationUtils.createCircularReveal(view, x, y, radius, 0);
+            return new NoPauseAnimatorWrapper(ViewAnimationUtils.createCircularReveal(view, x, y, radius, 0));
         }
 
         return null;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public CircularRevealTransition setCenter(final int x, final int y) {
         this.x = x;
         this.y = y;
