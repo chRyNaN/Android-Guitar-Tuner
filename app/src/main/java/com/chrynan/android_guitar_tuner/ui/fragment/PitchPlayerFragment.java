@@ -3,6 +3,9 @@ package com.chrynan.android_guitar_tuner.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +30,8 @@ public class PitchPlayerFragment extends BaseFragment implements PitchView {
     private static final String KEY_NOTE = "Note";
     private static final String KEY_FREQUENCY = "Frequency";
 
+    @BindView(R.id.containerConstraintLayout)
+    ConstraintLayout containerConstraintLayout;
     @BindView(R.id.noteTextView)
     TextView noteTextView;
     @BindView(R.id.volumeStateTextView)
@@ -36,6 +41,8 @@ public class PitchPlayerFragment extends BaseFragment implements PitchView {
     PitchPresenter presenter;
 
     private double frequency;
+
+    private Snackbar snackBar;
 
     public static PitchPlayerFragment newInstance(final String note, final double frequency) {
         Bundle bundle = new Bundle();
@@ -80,6 +87,8 @@ public class PitchPlayerFragment extends BaseFragment implements PitchView {
 
         presenter.stopPlayingNote();
         presenter.stopListeningToVolumeChanges();
+
+        dismissSnackBar();
     }
 
     @Override
@@ -100,10 +109,28 @@ public class PitchPlayerFragment extends BaseFragment implements PitchView {
                 .inject(this);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onUpdateVolumeState(@StringRes final int volumeStateText, @ColorRes final int textColor) {
         volumeStateTextView.setText(volumeStateText);
-        volumeStateTextView.setTextColor(getContext().getResources().getColor(textColor));
+        volumeStateTextView.setTextColor(ContextCompat.getColor(getContext(), textColor));
+    }
+
+    @Override
+    public void onErrorPlayingNote(@StringRes final int errorDescription, final boolean showAction,
+                                   @StringRes final int errorAction, @ColorRes final int actionColor) {
+        snackBar = Snackbar.make(containerConstraintLayout, errorDescription, Snackbar.LENGTH_INDEFINITE);
+
+        if (showAction) {
+            snackBar.setAction(errorAction, onClick -> presenter.retryPlayingNote(frequency))
+                    .setActionTextColor(ContextCompat.getColor(getContext(), actionColor));
+        }
+
+        snackBar.show();
+    }
+
+    private void dismissSnackBar() {
+        if (snackBar != null) {
+            snackBar.dismiss();
+        }
     }
 }

@@ -29,4 +29,6 @@
     <color name="permission_microphone_color">@color/secondary_accent_color</color>
     <color name="permission_circle_color">@color/white_25_percent_transparency</color>
 
+    <color name="snack_bar_action_color">@color/primary_accent_color</color>
+
 </resources>
