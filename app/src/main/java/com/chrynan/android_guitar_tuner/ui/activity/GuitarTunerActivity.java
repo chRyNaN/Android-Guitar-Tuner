@@ -91,6 +91,7 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
 
             if (showPitchPlayer) {
                 actionBar.setTitle(PitchPlayerFragment.TITLE);
+                actionBar.setHomeAsUpIndicator(R.drawable.app_bar_cancel_icon);
             } else {
                 actionBar.setTitle(CircleGuitarTunerFragment.TITLE);
             }
