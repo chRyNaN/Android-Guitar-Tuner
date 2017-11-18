@@ -16,6 +16,13 @@ public interface AudioPlayer {
     void stop();
 
     /**
+     * Releases all the internal resources held by this AudioPlayer. This should be called when the
+     * AudioPlayer is no longer needed and after a call to {@link #stop()}. After this method is
+     * called, a new AudioPlayer will have to be created to play again.
+     */
+    void release();
+
+    /**
      * Sets the audio waveform data that will be played to the audio output.
      *
      * @param waveformBuffer The waveform data to be played.

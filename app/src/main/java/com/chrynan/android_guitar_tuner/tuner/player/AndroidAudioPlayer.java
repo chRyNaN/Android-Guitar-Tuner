@@ -54,6 +54,11 @@ public class AndroidAudioPlayer implements AudioPlayer {
     }
 
     @Override
+    public void release() {
+        audioTrack.release();
+    }
+
+    @Override
     public void setBuffer(final float[] waveformBuffer) {
         audioTrack.write(waveformBuffer, 0, writeSize, AudioTrack.WRITE_BLOCKING);
         audioTrack.setLoopPoints(0, waveformBuffer.length, LOOP_COUNT_INFINITE);
