@@ -7,8 +7,9 @@ A simple Guitar Tuner Application for Android.
 ![Pitch Player Screen](/../ck/screenshots/screenshots/PitchPlaybackPixel.png?raw=true "Pitch Player Screen")
 
 ## License
-[License Link](/../develop/LICENSE)
+[Apache License, Version 2.0](/../develop/LICENSE)
 
+```
 Copyright {2017} {chRyNaN}
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,3 +23,4 @@ Copyright {2017} {chRyNaN}
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
 limitations under the License.
+```
