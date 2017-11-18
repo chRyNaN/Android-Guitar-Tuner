@@ -16,7 +16,8 @@ public class AndroidAudioPlayer implements AudioPlayer {
     private static final int LOOP_COUNT_INFINITE = -1;
 
     private final AudioTrack audioTrack;
-    private final int writeSize;
+
+    private final int outputByteCount;
 
     public AndroidAudioPlayer(final AudioConfig audioConfig) {
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -33,11 +34,11 @@ public class AndroidAudioPlayer implements AudioPlayer {
 
         audioTrack = new AudioTrack(audioAttributes,
                 audioFormat,
-                audioConfig.getInputBufferSize(),
+                audioConfig.getOutputBufferSize(),
                 AudioTrack.MODE_STATIC,
                 AudioManager.AUDIO_SESSION_ID_GENERATE);
 
-        writeSize = audioConfig.getWriteSize();
+        outputByteCount = audioConfig.getOutputFormatByteCount();
     }
 
     @Override
@@ -60,7 +61,7 @@ public class AndroidAudioPlayer implements AudioPlayer {
 
     @Override
     public void setBuffer(final float[] waveformBuffer) {
-        audioTrack.write(waveformBuffer, 0, writeSize, AudioTrack.WRITE_BLOCKING);
-        audioTrack.setLoopPoints(0, waveformBuffer.length, LOOP_COUNT_INFINITE);
+        audioTrack.write(waveformBuffer, 0, waveformBuffer.length, AudioTrack.WRITE_BLOCKING);
+        audioTrack.setLoopPoints(0, waveformBuffer.length / outputByteCount, LOOP_COUNT_INFINITE);
     }
 }

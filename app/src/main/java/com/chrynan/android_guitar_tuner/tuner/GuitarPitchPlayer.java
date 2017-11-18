@@ -31,9 +31,12 @@ public class GuitarPitchPlayer implements PitchPlayer {
             } catch (Exception exception) {
                 emitter.tryOnError(exception);
             }
-        }).doOnEvent(event -> {
-            audioPlayer.stop();
-            audioPlayer.release();
-        });
+        }).doOnEvent(event -> stopPlaying())
+                .doOnDispose(this::stopPlaying);
+    }
+
+    private void stopPlaying() {
+        audioPlayer.stop();
+        audioPlayer.release();
     }
 }
