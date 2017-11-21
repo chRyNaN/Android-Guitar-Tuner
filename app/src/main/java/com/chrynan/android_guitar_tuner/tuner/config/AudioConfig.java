@@ -59,7 +59,7 @@ public interface AudioConfig {
     int getInputChannel();
 
     /**
-     * The output channel to output the data.
+     * The output channel to output the data. For example, a value representing Stereo.
      *
      * @return The output channel.
      */
@@ -78,6 +78,14 @@ public interface AudioConfig {
      * @return The format of the buffer array.
      */
     int getOutputFormat();
+
+    /**
+     * The amount of bytes to represent a single piece of output data. For instance, 16-bit PCM data
+     * can be represented by two bytes.
+     *
+     * @return The amount of bytes needed to represent the output data.
+     */
+    int getOutputFormatByteCount();
 
     /**
      * The input source of the audio data.
