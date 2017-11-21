@@ -1,6 +1,7 @@
 package com.chrynan.android_guitar_tuner.tuner;
 
 import com.chrynan.android_guitar_tuner.tuner.converter.FrequencyConverter;
+import com.chrynan.android_guitar_tuner.tuner.effect.AudioEffect;
 import com.chrynan.android_guitar_tuner.tuner.player.AudioPlayer;
 
 import io.reactivex.Completable;
@@ -12,10 +13,12 @@ public class GuitarPitchPlayer implements PitchPlayer {
 
     private final AudioPlayer audioPlayer;
     private final FrequencyConverter frequencyConverter;
+    private final AudioEffect guitarAudioEffect;
 
-    public GuitarPitchPlayer(final AudioPlayer audioPlayer, final FrequencyConverter frequencyConverter) {
+    public GuitarPitchPlayer(final AudioPlayer audioPlayer, final FrequencyConverter frequencyConverter, final AudioEffect guitarAudioEffect) {
         this.audioPlayer = audioPlayer;
         this.frequencyConverter = frequencyConverter;
+        this.guitarAudioEffect = guitarAudioEffect;
     }
 
     @Override
@@ -25,7 +28,9 @@ public class GuitarPitchPlayer implements PitchPlayer {
             try {
                 final float[] audioData = frequencyConverter.convert(frequency);
 
-                audioPlayer.setBuffer(audioData);
+                final float[] guitarAudioData = guitarAudioEffect.execute(audioData);
+
+                audioPlayer.setBuffer(guitarAudioData);
 
                 audioPlayer.play();
             } catch (Exception exception) {
