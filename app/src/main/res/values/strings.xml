@@ -17,6 +17,7 @@
     <string name="volume_state_muted">Volume is muted</string>
 
     <string name="app_bar_action_share">Share</string>
+    <string name="app_bar_action_info">Info</string>
 
     <string name="share_app_intent_type">text/plain</string>
     <string name="share_app_subject">@string/app_name</string>
@@ -27,6 +28,8 @@
     <string name="pitch_player_error_playing_note_description_with_action">Unexpected error.</string>
     <string name="pitch_player_error_playing_note_description_without_action">Unexpected error. Please try again later.</string>
     <string name="pitch_player_error_playing_note_action">Retry</string>
+
+    <string name="app_info_appbar_title">App Info</string>
 
     <string-array name="circle_tuner_view_notes">
         <item>C</item>

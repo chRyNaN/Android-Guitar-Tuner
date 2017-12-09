@@ -38,6 +38,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.activity.AppInfoActivity"/>
+
     </application>
 
 </manifest>

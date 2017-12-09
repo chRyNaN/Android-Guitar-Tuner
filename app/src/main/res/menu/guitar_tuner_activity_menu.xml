@@ -8,4 +8,10 @@
         android:title="@string/app_bar_action_share"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/infoAction"
+        android:icon="@drawable/app_info_icon"
+        android:title="@string/app_bar_action_info"
+        app:showAsAction="ifRoom"/>
+
 </menu>
