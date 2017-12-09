@@ -15,6 +15,7 @@ import com.chrynan.android_guitar_tuner.di.component.DaggerAppInfoViewComponent;
 import com.chrynan.android_guitar_tuner.di.module.AppInfoViewModule;
 import com.chrynan.android_guitar_tuner.presenter.AppInfoPresenter;
 import com.chrynan.android_guitar_tuner.ui.view.AppInfoView;
+import com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell;
 
 import javax.inject.Inject;
 
@@ -25,6 +26,26 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoView {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.appNameTwoLineCell)
+    TwoLineCell appNameTwoLineCell;
+    @BindView(R.id.packageNameTwoLineCell)
+    TwoLineCell packageNameTwoLineCell;
+    @BindView(R.id.apkLocationTwoLineCell)
+    TwoLineCell apkLocationTwoLineCell;
+    @BindView(R.id.firstInstallTwoLineCell)
+    TwoLineCell firstInstallDateTwoLineCell;
+    @BindView(R.id.lastUpdatedTwoLineCell)
+    TwoLineCell lastUpdatedDateTwoLineCell;
+    @BindView(R.id.versionNameTwoLineCell)
+    TwoLineCell versionNameTwoLineCell;
+    @BindView(R.id.versionCodeTwoLineCell)
+    TwoLineCell versionCodeTwoLineCell;
+    @BindView(R.id.minSDKVersionTwoLineCell)
+    TwoLineCell minSDKVersionTwoLineCell;
+    @BindView(R.id.targetSDKVersionTwoLineCell)
+    TwoLineCell targetSDKVersionTwoLineCell;
+    @BindView(R.id.deviceSDKVersionTwoLineCell)
+    TwoLineCell deviceSDKVersionTwoLineCell;
 
     @Inject
     AppInfoPresenter presenter;
@@ -78,5 +99,55 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoView {
                 .appInfoViewModule(new AppInfoViewModule(this))
                 .build()
                 .inject(this);
+    }
+
+    @Override
+    public void showAppName(final String appName) {
+        appNameTwoLineCell.setSecondLineTextView(appName);
+    }
+
+    @Override
+    public void showPackageName(final String packageName) {
+        packageNameTwoLineCell.setSecondLineTextView(packageName);
+    }
+
+    @Override
+    public void showAPKLocation(final String location) {
+        apkLocationTwoLineCell.setSecondLineTextView(location);
+    }
+
+    @Override
+    public void showFirstInstallDate(final String firstInstall) {
+        firstInstallDateTwoLineCell.setSecondLineTextView(firstInstall);
+    }
+
+    @Override
+    public void showLastUpdatedDate(final String lastUpdated) {
+        lastUpdatedDateTwoLineCell.setSecondLineTextView(lastUpdated);
+    }
+
+    @Override
+    public void showVersionName(final String versionName) {
+        versionNameTwoLineCell.setSecondLineTextView(versionName);
+    }
+
+    @Override
+    public void showVersionCode(final String versionCode) {
+        versionCodeTwoLineCell.setSecondLineTextView(versionCode);
+    }
+
+    @Override
+    public void showMinSDKVersion(final String minSDKVersion) {
+        minSDKVersionTwoLineCell.setSecondLineTextView(minSDKVersion);
+    }
+
+    @Override
+    public void showTargetSDKVersion(final String targetSDKVersion) {
+        targetSDKVersionTwoLineCell.setSecondLineTextView(targetSDKVersion);
+    }
+
+    @Override
+    public void showDeviceSDKVersion(final String deviceSDKVersion) {
+        deviceSDKVersionTwoLineCell.setSecondLineTextView(deviceSDKVersion);
     }
 }

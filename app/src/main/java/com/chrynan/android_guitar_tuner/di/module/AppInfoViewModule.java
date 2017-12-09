@@ -1,6 +1,9 @@
 package com.chrynan.android_guitar_tuner.di.module;
 
+import android.content.Context;
+
 import com.chrynan.android_guitar_tuner.di.ActivityScope;
+import com.chrynan.android_guitar_tuner.di.ApplicationContext;
 import com.chrynan.android_guitar_tuner.presenter.AppInfoPresenter;
 import com.chrynan.android_guitar_tuner.ui.view.AppInfoView;
 
@@ -21,7 +24,7 @@ public class AppInfoViewModule {
 
     @Provides
     @ActivityScope
-    AppInfoPresenter provideAppInfoPresenter() {
-        return new AppInfoPresenter(view);
+    AppInfoPresenter provideAppInfoPresenter(@ApplicationContext Context context) {
+        return new AppInfoPresenter(context, view);
     }
 }
