@@ -46,6 +46,14 @@
                 style="@style/TwoLineCell"
                 app:firstLineText="@string/app_info_label_last_updated"/>
 
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/appStoreTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_app_store"
+                app:secondLineText="@string/app_info_text_app_store"/>
+
+            <include layout="@layout/layout_horizontal_divider"/>
+
             <TextView
                 style="@style/Subheader"
                 android:text="@string/app_info_subheader_version"/>
@@ -59,6 +67,8 @@
                 android:id="@+id/versionCodeTwoLineCell"
                 style="@style/TwoLineCell"
                 app:firstLineText="@string/app_info_label_version_code"/>
+
+            <include layout="@layout/layout_horizontal_divider"/>
 
             <TextView
                 style="@style/Subheader"
@@ -79,6 +89,8 @@
                 style="@style/TwoLineCell"
                 app:firstLineText="@string/app_info_label_android_device_version"/>
 
+            <include layout="@layout/layout_horizontal_divider"/>
+
             <TextView
                 style="@style/Subheader"
                 android:text="@string/app_info_subheader_source"/>
@@ -94,6 +106,8 @@
                 style="@style/TwoLineCell"
                 app:firstLineText="@string/app_info_label_issues"
                 app:secondLineText="@string/app_info_text_issues"/>
+
+            <include layout="@layout/layout_horizontal_divider"/>
 
             <TextView
                 style="@style/Subheader"

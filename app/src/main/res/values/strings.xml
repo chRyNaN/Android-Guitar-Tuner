@@ -36,21 +36,26 @@
     <string name="app_info_label_apk_location">App APK Location</string>
     <string name="app_info_label_first_install">First Installed</string>
     <string name="app_info_label_last_updated">Last Updated</string>
+    <string name="app_info_label_app_store">Google Play Store</string>
+    <string name="app_info_text_app_store">Open</string>
     <string name="app_info_subheader_version">Version</string>
     <string name="app_info_label_version_name">App Version Name</string>
     <string name="app_info_label_version_code">App Version Code</string>
     <string name="app_info_subheader_android">Android</string>
     <string name="app_info_label_android_min_version">Minimum Android Version</string>
     <string name="app_info_label_android_target_version">Target Android Version</string>
-    <string name="app_info_label_android_device_version">Device Version</string>
+    <string name="app_info_label_android_device_version">Device\'s Android Version</string>
     <string name="app_info_subheader_source">Source</string>
     <string name="app_info_label_code">Open Source Code</string>
+    <string name="app_info_link_code">https://github.com/chRyNaN/Android-Guitar-Tuner</string>
     <string name="app_info_text_code">Contribute</string>
-    <string name="app_info_label_issues">Issues</string>
+    <string name="app_info_label_issues">Issue</string>
+    <string name="app_info_link_issue">https://github.com/chRyNaN/Android-Guitar-Tuner/issues</string>
     <string name="app_info_text_issues">Submit Issue</string>
     <string name="app_info_subheader_legal">Legal</string>
     <string name="app_info_label_license">License</string>
     <string name="app_info_text_license">Apache License, Version 2.0</string>
+    <string name="app_info_link_license">https://github.com/chRyNaN/Android-Guitar-Tuner/blob/develop/LICENSE</string>
 
     <string-array name="circle_tuner_view_notes">
         <item>C</item>

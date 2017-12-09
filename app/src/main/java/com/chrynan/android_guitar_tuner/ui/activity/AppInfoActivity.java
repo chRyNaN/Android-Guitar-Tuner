@@ -2,6 +2,7 @@ package com.chrynan.android_guitar_tuner.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AppInfoActivity extends AppCompatActivity implements AppInfoView {
 
@@ -65,6 +67,8 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoView {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        presenter.getAppInformation();
     }
 
     @Override
@@ -149,5 +153,25 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoView {
     @Override
     public void showDeviceSDKVersion(final String deviceSDKVersion) {
         deviceSDKVersionTwoLineCell.setSecondLineTextView(deviceSDKVersion);
+    }
+
+    @OnClick(R.id.openSourceCodeTwoLineCell)
+    void onOpenSourceCodeClick() {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.app_info_link_code))));
+    }
+
+    @OnClick(R.id.appStoreTwoLineCell)
+    void onAppStoreClick() {
+        //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.share_app_link))));
+    }
+
+    @OnClick(R.id.issuesTwoLineCell)
+    void onIssuesClick() {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.app_info_link_issue))));
+    }
+
+    @OnClick(R.id.licenseTwoLineCell)
+    void onLicenseClick() {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.app_info_link_license))));
     }
 }
