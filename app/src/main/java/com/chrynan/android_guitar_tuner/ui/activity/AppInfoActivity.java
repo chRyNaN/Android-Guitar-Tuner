@@ -162,6 +162,7 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoView {
 
     @OnClick(R.id.appStoreTwoLineCell)
     void onAppStoreClick() {
+        // TODO enable Google Play Store click
         //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.share_app_link))));
     }
 

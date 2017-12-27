@@ -16,9 +16,9 @@ public class AppInfo {
     private final long lastUpdatedTime;
     private final String appName;
     private final String packageName;
-    private final AndroidVersion minAndroidVersion;
-    private final AndroidVersion targetAndroidVersion;
-    private final AndroidVersion deviceAndroidVersion;
+    private final AndroidApiLevel minAndroidApiLevel;
+    private final AndroidApiLevel targetAndroidApiLevel;
+    private final AndroidApiLevel deviceAndroidApiLevel;
     private final String apkLocation;
 
     public AppInfo(final PackageInfo packageInfo) {
@@ -28,10 +28,10 @@ public class AppInfo {
         this.lastUpdatedTime = packageInfo.lastUpdateTime;
         this.appName = packageInfo.applicationInfo.name;
         this.packageName = packageInfo.applicationInfo.packageName;
-        this.targetAndroidVersion = AndroidVersion.forVersionCode(packageInfo.applicationInfo.targetSdkVersion);
-        this.deviceAndroidVersion = AndroidVersion.forVersionCode(Build.VERSION.SDK_INT);
+        this.targetAndroidApiLevel = new AndroidApiLevel(packageInfo.applicationInfo.targetSdkVersion);
+        this.deviceAndroidApiLevel = new AndroidApiLevel(Build.VERSION.SDK_INT);
         this.apkLocation = packageInfo.applicationInfo.sourceDir;
-        this.minAndroidVersion = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? AndroidVersion.forVersionCode(packageInfo.applicationInfo.minSdkVersion) : AndroidVersion.UNKNOWN;
+        this.minAndroidApiLevel = new AndroidApiLevel(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? packageInfo.applicationInfo.minSdkVersion : AndroidVersion.UNKNOWN.getEarliestVersionCode());
     }
 
     /**
@@ -89,30 +89,30 @@ public class AppInfo {
     }
 
     /**
-     * Retrieves the {@link AndroidVersion} representing the minimum version this application allows.
+     * Retrieves the {@link AndroidApiLevel} representing the minimum version this application allows.
      *
-     * @return The minimum {@link AndroidVersion}.
+     * @return The minimum {@link AndroidApiLevel}.
      */
-    public AndroidVersion getMinAndroidVersion() {
-        return minAndroidVersion;
+    public AndroidApiLevel getMinAndroidApiLevel() {
+        return minAndroidApiLevel;
     }
 
     /**
-     * Retrieves the {@link AndroidVersion} representing the target version of this application.
+     * Retrieves the {@link AndroidApiLevel} representing the target version of this application.
      *
-     * @return The target {@link AndroidVersion}.
+     * @return The target {@link AndroidApiLevel}.
      */
-    public AndroidVersion getTargetAndroidVersion() {
-        return targetAndroidVersion;
+    public AndroidApiLevel getTargetAndroidApiLevel() {
+        return targetAndroidApiLevel;
     }
 
     /**
-     * Retrieves the {@link AndroidVersion} representing the current version on this device.
+     * Retrieves the {@link AndroidApiLevel} representing the current version on this device.
      *
-     * @return The device's current {@link AndroidVersion}.
+     * @return The device's current {@link AndroidApiLevel}.
      */
-    public AndroidVersion getDeviceAndroidVersion() {
-        return deviceAndroidVersion;
+    public AndroidApiLevel getDeviceAndroidApiLevel() {
+        return deviceAndroidApiLevel;
     }
 
     /**
@@ -138,15 +138,15 @@ public class AppInfo {
                 Objects.equals(versionName, appInfo.versionName) &&
                 Objects.equals(appName, appInfo.appName) &&
                 Objects.equals(packageName, appInfo.packageName) &&
-                minAndroidVersion == appInfo.minAndroidVersion &&
-                targetAndroidVersion == appInfo.targetAndroidVersion &&
-                deviceAndroidVersion == appInfo.deviceAndroidVersion &&
+                minAndroidApiLevel == appInfo.minAndroidApiLevel &&
+                targetAndroidApiLevel == appInfo.targetAndroidApiLevel &&
+                deviceAndroidApiLevel == appInfo.deviceAndroidApiLevel &&
                 Objects.equals(apkLocation, appInfo.apkLocation);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(versionName, versionCode, firstInstallTime, lastUpdatedTime, appName,
-                packageName, minAndroidVersion, targetAndroidVersion, deviceAndroidVersion, apkLocation);
+                packageName, minAndroidApiLevel, targetAndroidApiLevel, deviceAndroidApiLevel, apkLocation);
     }
 }

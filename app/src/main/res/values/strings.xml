@@ -22,6 +22,7 @@
     <string name="share_app_intent_type">text/plain</string>
     <string name="share_app_subject">@string/app_name</string>
     <string name="share_app_description">Download %1$s and keep your guitar in tune. %2$s</string>
+    <!-- TODO update App Link -->
     <string name="share_app_link">APP LINK GOES HERE</string>
     <string name="share_app_intent_title">Share App Link</string>
 
@@ -37,7 +38,7 @@
     <string name="app_info_label_first_install">First Installed</string>
     <string name="app_info_label_last_updated">Last Updated</string>
     <string name="app_info_label_app_store">Google Play Store</string>
-    <string name="app_info_text_app_store">Open</string>
+    <string name="app_info_text_app_store">Open in Play Store</string>
     <string name="app_info_subheader_version">Version</string>
     <string name="app_info_label_version_name">App Version Name</string>
     <string name="app_info_label_version_code">App Version Code</string>
@@ -56,6 +57,7 @@
     <string name="app_info_label_license">License</string>
     <string name="app_info_text_license">Apache License, Version 2.0</string>
     <string name="app_info_link_license">https://github.com/chRyNaN/Android-Guitar-Tuner/blob/develop/LICENSE</string>
+    <string name="app_info_text_api_level">Android %s API %d</string>
 
     <string-array name="circle_tuner_view_notes">
         <item>C</item>
