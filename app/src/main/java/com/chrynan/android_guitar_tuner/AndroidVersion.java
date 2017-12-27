@@ -21,7 +21,7 @@ public enum AndroidVersion {
     OREO(Constants.EARLIEST_VERSION_CODE_OREO, Constants.LATEST_VERSION_CODE_OREO, Constants.NAME_OREO),
     NEWER_THAN_OREO(Constants.EARLIEST_VERSION_CODE_NEWER_THAN_OREO, Constants.LATEST_VERSION_CODE_NEWER_THAN_OREO, Constants.NAME_NEWER_THAN_OREO),
     OLDER_THAN_DONUT(Constants.EARLIEST_VERSION_CODE_OLDER_THAN_DONUT, Constants.LATEST_VERSION_CODE_OLDER_THAN_DONUT, Constants.NAME_OLDER_THAN_DONUT),
-    UNKNOWN(Constants.EARLIEST_VERSION_CODE_UNKNOWN, Constants.LATEST_VERSION_CODE_UNKOWN, Constants.NAME_UNKNOWN);
+    UNKNOWN(Constants.EARLIEST_VERSION_CODE_UNKNOWN, Constants.LATEST_VERSION_CODE_UNKNOWN, Constants.NAME_UNKNOWN);
 
     public static AndroidVersion forVersionCode(final int versionCode) {
         for (AndroidVersion version : values()) {
@@ -112,7 +112,7 @@ public enum AndroidVersion {
         private static final int EARLIEST_VERSION_CODE_MARSHMALLOW = Build.VERSION_CODES.M;
         private static final int EARLIEST_VERSION_CODE_NOUGAT = Build.VERSION_CODES.N;
         private static final int EARLIEST_VERSION_CODE_OREO = Build.VERSION_CODES.O;
-        private static final int EARLIEST_VERSION_CODE_NEWER_THAN_OREO = EARLIEST_VERSION_CODE_OREO + 1;
+        private static final int EARLIEST_VERSION_CODE_NEWER_THAN_OREO = Build.VERSION_CODES.O_MR1 + 1;
         private static final int EARLIEST_VERSION_CODE_OLDER_THAN_DONUT = 0;
         private static final int EARLIEST_VERSION_CODE_UNKNOWN = Integer.MIN_VALUE;
 
@@ -127,9 +127,9 @@ public enum AndroidVersion {
         private static final int LATEST_VERSION_CODE_LOLLIPOP = Build.VERSION_CODES.LOLLIPOP_MR1;
         private static final int LATEST_VERSION_CODE_MARSHMALLOW = Build.VERSION_CODES.M;
         private static final int LATEST_VERSION_CODE_NOUGAT = Build.VERSION_CODES.N_MR1;
-        private static final int LATEST_VERSION_CODE_OREO = Build.VERSION_CODES.O;
+        private static final int LATEST_VERSION_CODE_OREO = Build.VERSION_CODES.O_MR1;
         private static final int LATEST_VERSION_CODE_NEWER_THAN_OREO = Integer.MAX_VALUE;
         private static final int LATEST_VERSION_CODE_OLDER_THAN_DONUT = LATEST_VERSION_CODE_DONUT - 1;
-        private static final int LATEST_VERSION_CODE_UNKOWN = -1;
+        private static final int LATEST_VERSION_CODE_UNKNOWN = -1;
     }
 }
