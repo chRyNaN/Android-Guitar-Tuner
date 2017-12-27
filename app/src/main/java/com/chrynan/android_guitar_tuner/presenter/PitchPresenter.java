@@ -9,6 +9,7 @@ import com.chrynan.android_guitar_tuner.ui.view.PitchView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class PitchPresenter implements Presenter {
 
@@ -39,21 +40,20 @@ public class PitchPresenter implements Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(() -> {
-                        },
-                        error -> {
-                            // TODO log error
+                }, error -> {
+                    Timber.e(error, "Error Starting Pitch Playback.");
 
-                            boolean showAction = retryCount < RETRY_COUNT_MAX;
-                            int description = showAction ? R.string.pitch_player_error_playing_note_description_with_action
-                                    : R.string.pitch_player_error_playing_note_description_without_action;
+                    boolean showAction = retryCount < RETRY_COUNT_MAX;
+                    int description = showAction ? R.string.pitch_player_error_playing_note_description_with_action
+                            : R.string.pitch_player_error_playing_note_description_without_action;
 
-                            view.onErrorPlayingNote(
-                                    description,
-                                    showAction,
-                                    R.string.pitch_player_error_playing_note_action,
-                                    R.color.snack_bar_action_color
-                            );
-                        });
+                    view.onErrorPlayingNote(
+                            description,
+                            showAction,
+                            R.string.pitch_player_error_playing_note_action,
+                            R.color.snack_bar_action_color
+                    );
+                });
     }
 
     public void retryPlayingNote(final double noteFrequency) {
@@ -77,6 +77,8 @@ public class PitchPresenter implements Presenter {
                     } else {
                         view.onUpdateVolumeState(R.string.volume_state_on, R.color.volume_on);
                     }
+                }, error -> {
+                    Timber.e(error, "Error Starting to Listen to Volume Changes.");
                 });
     }
 
