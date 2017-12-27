@@ -33,7 +33,7 @@ public class TunerPresenter implements Presenter {
         disposable = tuner.startListening()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(note -> view.onShowNote(note.getName(), note.getPercentOffset()),
+                .subscribe(note -> view.onShowNote(note.getName(), note.getFrequency(), note.getPercentOffset()),
                         error -> Timber.e(error, "Error Starting to Listen to Notes."));
     }
 
