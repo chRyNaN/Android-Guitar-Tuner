@@ -4,6 +4,7 @@
     <dimen name="spacing_small">16dp</dimen>
     <dimen name="spacing_medium">24dp</dimen>
 
+    <dimen name="text_size_xsmall">14sp</dimen>
     <dimen name="text_size_small">16sp</dimen>
     <dimen name="text_size_medium">24sp</dimen>
     <dimen name="text_size_large">128sp</dimen>
@@ -19,5 +20,7 @@
 
     <dimen name="permission_circle_size">256dp</dimen>
     <dimen name="permission_microphone_size">256dp</dimen>
+
+    <dimen name="horizontal_divider_height">1dp</dimen>
 
 </resources>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_toolbar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Subheader"
+                android:text="@string/app_info_subheader_app"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/appNameTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_app_name"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/packageNameTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_package_name"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/apkLocationTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_apk_location"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/firstInstallTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_first_install"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/lastUpdatedTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_last_updated"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/appStoreTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_app_store"
+                app:secondLineText="@string/app_info_text_app_store"/>
+
+            <include layout="@layout/layout_horizontal_divider"/>
+
+            <TextView
+                style="@style/Subheader"
+                android:text="@string/app_info_subheader_version"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/versionNameTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_version_name"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/versionCodeTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_version_code"/>
+
+            <include layout="@layout/layout_horizontal_divider"/>
+
+            <TextView
+                style="@style/Subheader"
+                android:text="@string/app_info_subheader_android"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/minSDKVersionTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_android_min_version"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/targetSDKVersionTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_android_target_version"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/deviceSDKVersionTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_android_device_version"/>
+
+            <include layout="@layout/layout_horizontal_divider"/>
+
+            <TextView
+                style="@style/Subheader"
+                android:text="@string/app_info_subheader_source"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/openSourceCodeTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_code"
+                app:secondLineText="@string/app_info_text_code"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/issuesTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_issues"
+                app:secondLineText="@string/app_info_text_issues"/>
+
+            <include layout="@layout/layout_horizontal_divider"/>
+
+            <TextView
+                style="@style/Subheader"
+                android:text="@string/app_info_subheader_legal"/>
+
+            <com.chrynan.android_guitar_tuner.ui.widget.TwoLineCell
+                android:id="@+id/licenseTwoLineCell"
+                style="@style/TwoLineCell"
+                app:firstLineText="@string/app_info_label_license"
+                app:secondLineText="@string/app_info_text_license"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

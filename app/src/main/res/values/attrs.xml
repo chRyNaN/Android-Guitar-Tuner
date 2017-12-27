@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="CircleTunerView">
         <attr name="indicatorColor" format="color"/>
         <attr name="outerCircleColor" format="color"/>
@@ -10,4 +11,10 @@
         <attr name="showShadows" format="boolean"/>
         <attr name="showTuningState" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="TwoLineCell">
+        <attr name="firstLineText" format="string"/>
+        <attr name="secondLineText" format="string"/>
+    </declare-styleable>
+
 </resources>

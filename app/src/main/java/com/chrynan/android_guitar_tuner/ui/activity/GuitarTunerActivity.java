@@ -122,6 +122,9 @@ public class GuitarTunerActivity extends AppCompatActivity implements TunerPitch
             case R.id.shareAction:
                 shareApp();
                 return true;
+            case R.id.infoAction:
+                startActivity(AppInfoActivity.newIntent(this));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
