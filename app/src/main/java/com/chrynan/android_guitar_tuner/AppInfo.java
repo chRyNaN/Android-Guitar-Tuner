@@ -26,7 +26,7 @@ public class AppInfo {
         this.versionCode = packageInfo.versionCode;
         this.firstInstallTime = packageInfo.firstInstallTime;
         this.lastUpdatedTime = packageInfo.lastUpdateTime;
-        this.appName = packageInfo.applicationInfo.name;
+        this.appName = packageInfo.applicationInfo.name.substring(packageInfo.applicationInfo.name.lastIndexOf(".") + 1);
         this.packageName = packageInfo.applicationInfo.packageName;
         this.targetAndroidApiLevel = new AndroidApiLevel(packageInfo.applicationInfo.targetSdkVersion);
         this.deviceAndroidApiLevel = new AndroidApiLevel(Build.VERSION.SDK_INT);
