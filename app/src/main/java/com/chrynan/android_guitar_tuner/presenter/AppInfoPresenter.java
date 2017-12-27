@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 public class AppInfoPresenter implements Presenter {
 
     @ApplicationContext
@@ -46,13 +48,11 @@ public class AppInfoPresenter implements Presenter {
             AndroidApiLevel targetVersion = appInfo.getTargetAndroidApiLevel();
             AndroidApiLevel deviceVersion = appInfo.getDeviceAndroidApiLevel();
 
-            // TODO show the actual API version in the String output
-
             view.showMinSDKVersion(res.getString(R.string.app_info_text_api_level, minVersion.getAndroidVersion().getName(), minVersion.getVersionCode()));
             view.showTargetSDKVersion(res.getString(R.string.app_info_text_api_level, targetVersion.getAndroidVersion().getName(), targetVersion.getVersionCode()));
             view.showDeviceSDKVersion(res.getString(R.string.app_info_text_api_level, deviceVersion.getAndroidVersion().getName(), deviceVersion.getVersionCode()));
         } catch (PackageManager.NameNotFoundException e) {
-            // TODO Log Out Exception
+            Timber.e(e, "Error Retrieving PackageManager or PackageInfo.");
             // TODO Display defaults/error
         }
     }

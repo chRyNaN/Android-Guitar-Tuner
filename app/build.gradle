@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.chrynan.android_guitar_tuner"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -28,8 +28,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // Android Support Libraries
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:design:27.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Butterknife - View Injection
@@ -43,7 +43,10 @@ dependencies {
 
     // RxJava and RxAndroid - Reactive Programming
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.7'
+
+    // Timber - Logging
+    implementation 'com.jakewharton.timber:timber:4.6.0'
 
     // Testing
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

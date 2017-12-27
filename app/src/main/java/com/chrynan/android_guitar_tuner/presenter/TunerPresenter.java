@@ -8,6 +8,7 @@ import com.chrynan.android_guitar_tuner.ui.view.TunerView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class TunerPresenter implements Presenter {
 
@@ -32,7 +33,8 @@ public class TunerPresenter implements Presenter {
         disposable = tuner.startListening()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(note -> view.onShowNote(note.getName(), note.getPercentOffset()));
+                .subscribe(note -> view.onShowNote(note.getName(), note.getPercentOffset()),
+                        error -> Timber.e(error, "Error Starting to Listen to Notes."));
     }
 
     public void stopListeningForNotes() {
