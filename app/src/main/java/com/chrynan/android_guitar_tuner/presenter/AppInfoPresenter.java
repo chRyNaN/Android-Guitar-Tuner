@@ -3,9 +3,11 @@ package com.chrynan.android_guitar_tuner.presenter;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 
-import com.chrynan.android_guitar_tuner.AndroidVersion;
+import com.chrynan.android_guitar_tuner.AndroidApiLevel;
 import com.chrynan.android_guitar_tuner.AppInfo;
+import com.chrynan.android_guitar_tuner.R;
 import com.chrynan.android_guitar_tuner.di.ApplicationContext;
 import com.chrynan.android_guitar_tuner.ui.view.AppInfoView;
 
@@ -30,6 +32,7 @@ public class AppInfoPresenter implements Presenter {
         try {
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             AppInfo appInfo = new AppInfo(packageInfo);
+            Resources res = context.getResources();
 
             view.showAppName(appInfo.getAppName());
             view.showPackageName(appInfo.getPackageName());
@@ -39,15 +42,15 @@ public class AppInfoPresenter implements Presenter {
             view.showFirstInstallDate(simpleDateFormat.format(new Date(appInfo.getFirstInstallTime())));
             view.showLastUpdatedDate(simpleDateFormat.format(new Date(appInfo.getLastUpdatedTime())));
 
-            AndroidVersion minVersion = appInfo.getMinAndroidVersion();
-            AndroidVersion targetVersion = appInfo.getTargetAndroidVersion();
-            AndroidVersion deviceVersion = appInfo.getDeviceAndroidVersion();
+            AndroidApiLevel minVersion = appInfo.getMinAndroidApiLevel();
+            AndroidApiLevel targetVersion = appInfo.getTargetAndroidApiLevel();
+            AndroidApiLevel deviceVersion = appInfo.getDeviceAndroidApiLevel();
 
             // TODO show the actual API version in the String output
 
-            view.showMinSDKVersion(minVersion.getName());
-            view.showTargetSDKVersion(targetVersion.getName());
-            view.showDeviceSDKVersion(deviceVersion.getName());
+            view.showMinSDKVersion(res.getString(R.string.app_info_text_api_level, minVersion.getAndroidVersion().getName(), minVersion.getVersionCode()));
+            view.showTargetSDKVersion(res.getString(R.string.app_info_text_api_level, targetVersion.getAndroidVersion().getName(), targetVersion.getVersionCode()));
+            view.showDeviceSDKVersion(res.getString(R.string.app_info_text_api_level, deviceVersion.getAndroidVersion().getName(), deviceVersion.getVersionCode()));
         } catch (PackageManager.NameNotFoundException e) {
             // TODO Log Out Exception
             // TODO Display defaults/error
