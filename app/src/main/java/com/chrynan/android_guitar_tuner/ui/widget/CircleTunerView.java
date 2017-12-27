@@ -1,5 +1,6 @@
 package com.chrynan.android_guitar_tuner.ui.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.chrynan.android_guitar_tuner.R;
+import com.chrynan.android_guitar_tuner.ui.view.TunerWidgetView;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -34,11 +36,11 @@ import butterknife.ButterKnife;
 
 /**
  * A circular guitar tuner View. This View displays all notes, an indicator to show the current
- * note, and the current note. To change the note, call the {@link #updateNote(String, float)}
+ * note, and the current note. To change the note, call the {@link #updateNote(String, double, float)}
  * method providing the current String note representation and the angle for the indicator.
  */
 @SuppressWarnings("unused")
-public class CircleTunerView extends View {
+public class CircleTunerView extends View implements TunerWidgetView {
 
     public static final int IN_TUNE = 0;
     public static final int OUT_OF_TUNE = 1;
@@ -251,7 +253,7 @@ public class CircleTunerView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         // Draw the state circle - undefined state doesn't draw a circle keeping that region transparent
-        if (currentState == TuningState.IN_TUNE || currentState == TuningState.OUT_OF_TUNE) {
+        if (showTunerState() && currentState != TuningState.UNDEFINED) {
             stateCirclePaint.setColor(currentState == TuningState.IN_TUNE ? stateInTuneCircleColor : stateOutOfTuneCircleColor);
             canvas.drawCircle(centerX, centerY, stateCircleRadius, stateCirclePaint);
         }
@@ -280,6 +282,7 @@ public class CircleTunerView extends View {
     }
 
     @Override
+    @SuppressLint("WrongConstant")
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
 
@@ -293,6 +296,7 @@ public class CircleTunerView extends View {
     }
 
     @Override
+    @SuppressLint("WrongConstant")
     public void onRestoreInstanceState(Parcelable parcelable) {
         if (parcelable instanceof SavedState) {
             SavedState savedState = (SavedState) parcelable;
@@ -308,6 +312,7 @@ public class CircleTunerView extends View {
     }
 
     @Override
+    @SuppressLint("ClickableViewAccessibility")
     public boolean onTouchEvent(MotionEvent event) {
         // We only care about the touch event if a listener is set
         if (listener != null) {
@@ -336,24 +341,8 @@ public class CircleTunerView extends View {
         return super.onTouchEvent(event);
     }
 
-    /**
-     * Updates the view to display the provided note. The String note name provided will be
-     * displayed on top of the center circle. The indicator will be drawn at the angle calculated.
-     * The angle corresponds to the default Android View angle starting position
-     * (see {@link Canvas#drawArc(float, float, float, float, float, float, boolean, Paint)}).
-     * Depending on the {@link TuningState} int calculated, a background circle between the center
-     * and outer circle will be drawn either green, red, or transparent. The View is not responsible
-     * for animating between values provided and the previous value.
-     *
-     * @param noteName      The String to display that represents the current note. This should
-     *                      correspond to a value in the circle_tuner_view_notes in the Strings
-     *                      resource file.
-     * @param percentOffset The percent offset used to calculate the angle, in radians, to display
-     *                      the indicator at. This value is computed outside of this class because
-     *                      the size of this view isn't needed and this view shouldn't be concerned
-     *                      with the frequency values.
-     */
-    public void updateNote(@Nullable final String noteName, final float percentOffset) {
+    @Override
+    public void updateNote(final String noteName, final double frequency, final float percentOffset) {
         int p = 0;
         int l = notes.length;
 
@@ -536,7 +525,7 @@ public class CircleTunerView extends View {
     private void updateTuningState(final float percentOffset) {
         currentState = TuningState.UNDEFINED;
 
-        if (showTunerState) {
+        if (showTunerState()) {
             currentState = Math.abs(percentOffset) < TUNING_STATE_FREQUENCY_THRESHOLD ? TuningState.IN_TUNE : TuningState.OUT_OF_TUNE;
         }
     }

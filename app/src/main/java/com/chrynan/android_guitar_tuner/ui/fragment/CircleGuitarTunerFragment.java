@@ -2,6 +2,7 @@ package com.chrynan.android_guitar_tuner.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,6 @@ public class CircleGuitarTunerFragment extends BaseFragment implements TunerView
 
     private OnPlayNoteListener listener;
 
-    private float currentAnimationValue;
-
     public static CircleGuitarTunerFragment newInstance() {
         return new CircleGuitarTunerFragment();
     }
@@ -58,7 +57,7 @@ public class CircleGuitarTunerFragment extends BaseFragment implements TunerView
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflateAndBindView(inflater, R.layout.fragment_circle_guitar_tuner, container, false);
 
         circleTunerView.setOnNotePressedListener(this);
@@ -69,7 +68,7 @@ public class CircleGuitarTunerFragment extends BaseFragment implements TunerView
                 @Override
                 public void onGlobalLayout() {
                     circleTunerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    circleTunerView.updateNote(null, 0);
+                    circleTunerView.updateNote(null, 0, 0);
                 }
             });
         }
@@ -110,9 +109,9 @@ public class CircleGuitarTunerFragment extends BaseFragment implements TunerView
     }
 
     @Override
-    public void onShowNote(final String noteName, final float percentOffset) {
+    public void onShowNote(final String noteName, final double frequency, final float percentOffset) {
         if (circleTunerView != null) {
-            circleTunerView.updateNote(noteName, percentOffset);
+            circleTunerView.updateNote(noteName, frequency, percentOffset);
         }
     }
 

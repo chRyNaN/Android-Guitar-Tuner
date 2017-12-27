@@ -5,7 +5,7 @@ package com.chrynan.android_guitar_tuner.ui.view;
  */
 public interface TunerView {
 
-    void onShowNote(String noteName, float percentOffset);
+    void onShowNote(String noteName, double frequency, float percentOffset);
 
     void onPlayNote(String noteName, double frequency, float x, float y);
 }
