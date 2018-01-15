@@ -1,6 +1,9 @@
 # Android-Guitar-Tuner
 A simple Guitar Tuner Application for Android.
 
+## Wiki
+For information on the project, such as, how to build the application, checkout the [Wiki](https://github.com/chRyNaN/Android-Guitar-Tuner/wiki).
+
 ## Screenshots
 ![Permission Screen](/../ck/screenshots/screenshots/PermissionPixel.png?raw=true "Permission Screen")
 ![Guitar Tuner Screen](/../ck/screenshots/screenshots/GuitarTunerPixel.png?raw=true "Guitar Tuner Screen")
