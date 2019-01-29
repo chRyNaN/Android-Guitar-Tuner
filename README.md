@@ -27,3 +27,6 @@ Copyright {2017} {chRyNaN}
    See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+## Status of Project
+Please note that this is no longer an active project. You are more than welcome to fork the project and use the code in accordance with the license. However, updates on the project will be few if any. If you are interested, have a look at some of my other projects at my Github Profile: https://github.com/chRyNaN
